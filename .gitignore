@@ -5,3 +5,9 @@
 *.blg
 *.aux
 *.bat
+*.aux
+*.bbl
+*.lof
+*.lot
+*.toc
+/Latex/*.pdf
