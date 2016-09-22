@@ -1,72 +1,26 @@
 %
 % Monografia de TCC1 de Douglas Brauner
 %
-% Elaborado com base nas orientações dadas no documento
-% ``GUIA PARA ELABORAÇÃO DE TRABALHOS ACADÊMICOS''
-% disponível no site da biblioteca da Unisinos.
-% http://www.unisinos.br/biblioteca
-%
-%
-
-%=======================================================================
-% Declarações iniciais identificando a classe de documento e
-% selecionando alguns pacotes adicionais.
-%
-% As opções disponíveis (separe-as com vírgulas, sem espaço) são:
-% - twoside: Formata o documento para impressão frente-e-verso
-%   (o default é somente-frente)
-% - english,brazilian,french,german,etc.: idiomas usados no documento.
-%   Deve ser colocado por último o idioma principal.
-%=======================================================================
 \documentclass[twoside,english,brazilian]{UNISINOSmonografia}
 \usepackage[utf8]{inputenc} % charset do texto (utf8, latin1, etc.)
 \usepackage[T1]{fontenc} % encoding da fonte (afeta a sep. de sílabas)
 \usepackage{graphicx} % comandos para gráficos e inclusão de figuras
 \usepackage{bibentry} % para inserir refs. bib. no meio do texto
-
-%=======================================================================
-% Escolha do sistema para geração de referências bibliográficas.
-%
-% O default é usar o estilo unisinos.bst.  Comente a definição abaixo
-% e descomente a linha seguinte para usar o estilo do ABNTeX (é
-% necessário ter esse pacote instalado).
-%
-% A vantagem do unisinos.bst é que ele permite o uso de um arquivo .bib
-% seguindo as orientações tradicionais do BibTeX (veja essas orientações
-% em http://ctan.tug.org/tex-archive/biblio/bibtex/contrib/doc/btxdoc.pdf).
-% Entretanto, o estilo não suporta algumas citações mais exóticas como
-% apud.  Para isso, use o ABNTeX, mas esteja ciente de que muitas de
-% suas referências serão incompatíveis com os estilos tradicionais do
-% BibTeX como plain, alpha, ieeetr, entre outros.
+\usepackage{tabularx}
 %=======================================================================
 \unisinosbst
-%\usepackage[alf]{abntcite}
 
 %=======================================================================
 % Dados gerais sobre o trabalho.
 %=======================================================================
 \autor{Brauner}{Douglas}
-\titulo{Monografia de Douglas Brauner}
-\subtitulo{sub}
+\titulo{Elasticidade Baseada em Containers para Aplicação de Alto Desempenho}
+%\subtitulo{sub}
 \orientador[Prof.~Dr.]{Righi}{Rodrigo da Rosa}
 %\coorientador[Prof.~Dr.]{Lamport}{Leslie}
 \local{São Leopoldo}
 \ano{2016}
 
-%% dados específicos para Dissertação de Mestrado
-%\unidade{Unidade Acadêmica de Pesquisa e Pós-Graduação}
-%\curso{Programa de Pós-Graduação em Computação Aplicada}
-%\nivel{Nível Mestrado}
-%\natureza{%
-%Dissertação apresentada como requisito parcial para a obtenção
-%do título de Mestre pelo Programa de Pós-Graduação em Computação
-%Aplicada da Universidade do Vale do Rio dos Sinos --- UNISINOS
-%}
-%% dados da ficha catalográfica (obrigatória somente para diss. e tese)
-%\cip{Dissertação (mestrado)}{004.732}
-%\bibliotecario{Bibliotecária responsável: Fulana da Silva}{12/3456}
-
-%% dados específicos para monografia de Graduação
 \unidade{Unidade Acadêmica Graduação}
 \curso{Curso de Bacharelado em Ciência da Computação}
 \natureza{%
@@ -82,9 +36,10 @@ pela Universidade do Vale do Rio dos Sinos --- UNISINOS
 % TODO: adicionar mais palavras-chave
 \palavrachave{brazilian}{Computação em Nuvem}
 \palavrachave{brazilian}{Elasticidade}
+\palavrachave{brazilian}{Containerização}
 \palavrachave{english}{Cloud Computing}
 \palavrachave{english}{Elasticity}
-
+\palavrachave{english}{Containerization}
 %palavrachave{}
 
 
@@ -137,60 +92,60 @@ Obrigado!
 % A recomendação é para 150 a 500 palavras.
 %=======================================================================
 \begin{abstract}
-  Ao mesmo tempo, ele serve como exemplo de uso da classe, demonstrando os principais comandos a serem utilizados, e outras orientações mais gerais de uso do \LaTeX.  Adicionalmente, procuramos incluir no documento algumas orientações sobre a escrita da monografia em si, reunindo dicas e recomendações que contribuem para aumentar a qualidade técnica dos trabalhos acadêmicos.  O Resumo deve conter de 150 a 500~palavras e nele não deve haver citações. Sugere-se a utilização de parágrafo único.
+A definir
 \end{abstract}
 
 
 \begin{otherlanguage}{english}
 \begin{abstract}
-Único parágrafo. de até 500 palavras e sem citações.
+A definir
 \end{abstract}
 \end{otherlanguage}
 
 %=======================================================================
 % Lista de Figuras (opcional).
 %=======================================================================
-\listoffigures
+%\listoffigures
 
 %=======================================================================
 % Lista de Tabelas (opcional).
 %=======================================================================
-\listoftables
+%\listoftables
 
 %=======================================================================
 % Lista de Abreviaturas (opcional).
 %
 % Deve ser passada como parâmetro a maior das abreviaturas utilizadas.
 %=======================================================================
-\begin{listadeabreviaturas}{seg., segs.}
-\item[ampl.] ampliado, -a
-\item[atual.] atualizado, -a
-\item[coord.] coordenador
-\item[N.~T.] Novo Testamento
-\item[seg., segs.] seguinte, -s
-\end{listadeabreviaturas}
+%\begin{listadeabreviaturas}{seg., segs.}
+%\item[ampl.] ampliado, -a
+%\item[atual.] atualizado, -a
+%\item[coord.] coordenador
+%\item[N.~T.] Novo Testamento
+%\item[seg., segs.] seguinte, -s
+%\end{listadeabreviaturas}
 
 %=======================================================================
 % Lista de Siglas (opcional).
 %
 % Deve ser passada como parâmetro a maior das siglas utilizadas.
 %=======================================================================
-\begin{listadesiglas}{FAPERGS}
-\item[ABNT] Associação Brasileira de Normas Técnicas
-\item[CAPES] Coordenação de Aperfeiçoamento de Pessoal de Nível Superior
-\item[FAPERGS] Fundação de Amparo à Pesquisa do Estado do Rio Grande do Sul
-\end{listadesiglas}
+%\begin{listadesiglas}{FAPERGS}
+%\item[ABNT] Associação Brasileira de Normas Técnicas
+%\item[CAPES] Coordenação de Aperfeiçoamento de Pessoal de Nível Superior
+%\item[FAPERGS] Fundação de Amparo à Pesquisa do Estado do Rio Grande do Sul
+%\end{listadesiglas}
 
 %=======================================================================
 % Lista de Símbolos (opcional).
 %
 % Deve ser passado o maior (mais largo) dos símbolos utilizados.
 %=======================================================================
-\begin{listadesimbolos}{Ca}
-\item[\textsuperscript{o}C] Graus Celsius
-\item[Al] Alumínio
-\item[Ca] Cálcio
-\end{listadesimbolos}
+%\begin{listadesimbolos}{Ca}
+%\item[\textsuperscript{o}C] Graus Celsius
+%\item[Al] Alumínio
+%\item[Ca] Cálcio
+%\end{listadesimbolos}
 
 %=======================================================================
 % Sumário
@@ -203,28 +158,24 @@ Obrigado!
 \chapter{Introdução}
 
 % as epígrafes nos capítulos são opcionais
-\epigrafecap{The reasonable man adapts himself to the world; the unreasonable one persists in trying to adapt the world to himself. Therefore all progress depends on the unreasonable man.}{George Bernard Shaw}
 
-Conforme \citetexto{Hexsel11}, a introdução tem o objetivo de ``\emph{introduzir} o material que vai ser apresentado em mais detalhe nas seções subseqüentes''. Na introdução você deve contextualizar o problema e mostrar por que vale a pena resolvê-lo. Você deve apresentar a solução proposta e mostrar o seu diferencial em relação aos trabalhos relacionados. Observe, porém, que na introdução você deve apenas tratar do O QUÊ e PORQUÊ, sem tratar do como \cite{Hexsel11}, que deve ser explicado na seção que descreve o trabalho desenvolvido.
+%\epigrafecap{The reasonable man adapts himself to the world; the unreasonable one persists in trying to adapt the world to himself. Therefore all progress depends on the unreasonable man.}{George Bernard Shaw}
 
-Geralmente, a introdução tem uma estrutura similar ao resumo e deve apresentar:
+%Conforme \citetexto{Hexsel11}, a introdução tem o objetivo de ``\emph{introduzir} o material que vai ser apresentado em mais detalhe nas seções subseqüentes''. Na introdução você deve contextualizar o problema e mostrar por que vale a pena resolvê-lo. Você deve apresentar a solução proposta e mostrar o seu diferencial em relação aos trabalhos relacionados. Observe, porém, que na introdução você deve apenas tratar do O QUÊ e PORQUÊ, sem tratar do como \cite{Hexsel11}, que deve ser explicado na seção que descreve o trabalho desenvolvido.
+A definir
 \begin{itemize}
-	\item \textbf{Contexto e motivação:} Aqui você deve apresentar o contexto do trabalho (área de que ele se trata) e uma motivação para trabalhar nesse assunto.
-	\item \textbf{Problema:} Aqui você vai apresentar um problema, uma lacuna, observada na área e que você pretende tratar. Você deve se perguntar aqui: ``Que respostas estou disposto a responder?''. O problema deve ser definido claramente e delimitado em termos de espaço de tempo. Veja que essa parte visa alertar o leitor de que o que você está propondo é uma solução para um problema observado na área. 
-	\item \textbf{Objetivos:} Aqui você deve apresentar os objetivos do seu trabalho. Tome cuidado para não confundir objetivos com atividades.   Faça a si mesmo a pergunta: ``O que pretendo alcançar com a pesquisa?''. Você pode discernir entre objetivos gerais e objetivos específicos:
+	\item \textbf{Contexto e motivação:} 
+
+	\item \textbf{Problema:}Considerando o cenário atual de aplicações HPC iterativas, bem como a elasticidade que containers oferecem, o trabalho aqui disposto busca responder a seguinte questão:
+	\textit{Como seria o modelo de elasticidade em nuvem adaptado para o uso de containers para aplicações HPC iterativas, que possa gerar um ganho significativo de economia de recursos?} 
+	\item \textbf{Objetivos:} 
+	\begin{itemize}
+		\item Desenvolver um modelo de elasticidade automática adaptada para uso de containers, para aplicações de Computação de Alto Desempenho, em ambientes de computação em nuvem, com foco em otimizar a utilização de recursos, em comparação ao método de elasticidade automática baseado em virtualização de máquinas.  
+	\end{itemize}
 	\begin{itemize}
 		\item Objetivo geral --- qual o propósito da pesquisa?
 		\item Objetivos específicos --- abertura do objetivo geral em outros menores (possíveis capítulos).
 	\end{itemize}
-	Veja abaixo um exemplo de objetivo retirado da monografia de~\citetexto{Teixeira09}:
-
-	Com a possibilidade de acesso a base de dados XML gerada a partir do Sistema de Currículos Lattes e a necessidade de melhor reutilizar as informações existentes neste sistema, o presente trabalho tem como objetivo geral permitir o acesso do pesquisador a seus dados através de uma interface mais amigável: o padrão LaTeX. Para isto destacam-se os seguintes objetivos específicos:
-	\begin{alineas}
-		\item identificar e analisar o formato de especificação de currículos da Plataforma Lattes;
-		\item disponibilizar uma ferramenta para a geração de uma representação de dados intermediária a partir do formato especificado;
-		\item implementar a tradução dos dados colhidos em código LaTeX através da utilização da ferramenta criada;
-		\item analisar os resultados obtidos e as alternativas presentes no uso da ferramenta.
-	\end{alineas}
 \end{itemize}
 
 %=======================================================================
@@ -234,125 +185,94 @@ Geralmente, a introdução tem uma estrutura similar ao resumo e deve apresentar
 
 \section{Computação em Nuvem}
 Segundo a definição do National Institute of Standards and Technologies (NIST) \cite{Mell2012}, a computação em nuvem é um modelo que permite o acesso de recursos computacionais configuráveis e compartilhados, de forma conveniente, ubíqua e sob demanda, capazes de ser provisionados e entregues com baixo custo de gerenciamento e sem a intervenção de um provedor de serviços. Tais recursos podem ser: redes, servidores, serviços, armazenamento, aplicações, etc. Tais recursos são tipicamente fornecidos no modelo \textit{pay-as-you-go}, ou seja, você paga de acordo com a demanda de recursos solicitada \cite{Suleiman2012}. Sendo assim, a computação em nuvem se utiliza de mecanismos para escalar estes recursos conforme necessidade, através de algoritmos que irão trabalhar no balanceamento de carga rapidamente para diminuir o desperdício de recursos computacionais.
-
-\section{Docker}
-
+Algumas abordagens deixam o gerenciamento de balanceamento de carga e recursos por conta da aplicação, que se faz uso de API (\textit{Application Program Interface}) para definir por meio de codificação dentro da própria implementação o controle. Esta abordagen requer que a implementação tenha consciência dos pontos específicos de implementação do controle, o que pode fugir do foco principal do programa. Outras tecnologias oferecem um mecanismo externo à aplicação para o controle de recursos utilizados, deixando para a aplicação apenas determinar os pontos de chamada de sistema para reorganizações necessárias na topologia de comunicação. 
 
 
-\section{Comandos do \LaTeX}
-Como regra geral, use os comandos tradicionais do \LaTeX\ para formatar seu texto.  Neste documento procuramos demonstrar os comandos mais comumente utilizados em monografias acadêmicas.
+% TODO: Diferenciar elasticidade e escalabilidade
+\section{Elasticidade vs Escalabilidade}
 
-Neste capítulo apresentamos alguns exemplos de como colocar figuras e tabelas no seu texto.
+A escalabilidade de uma aplicação se diz respeito à quantidade de usuários que ela pode manter conectados ao mesmo tempo, sendo o limite de escalabidade o ponto em que esta não pode suportar mais usuários conectados sem apresentar a mesma  eficiência \cite{Wilder12}. Uma aplicação pode ter a sua escalabilidade estendida através do fornecimento de recursos de \textit{hardware} adicionais, como memória, CPU, largura de banda, etc. No contexto de uma aplicação HPC, uma escalabilidade não se detêm apenas ao número de usuários suportados, mas também ao tipo de processamento que a aplicação precisa executar e que pode precisar de recursos adicionais para continuar desempenhando de forma efetiva. 
 
-\section{Ilustrações}
 
-\subsection{Legendas}
-As legendas das figuras devem se encontrar no topo da figura e não abaixo, como usualmente colocado. Abaixo da figura, é obrigatório colocar a fonte (mesmo que a figura tenha sido do próprio autor).
+\section{Virtualização vs Containerização}
 
-As legendas devem conter o tipo da ilustração (Figura, Tabela, etc), seguido de numeração simples (sem número do capítulo).
+Uma camada de virtualização pode ajudar a isolar um ambiente compartilhado de computadores. Em clusters de HPC, normalmente os recursos são compartilhados entre mais usuários e isto faz com que possa ocorrer problemas nesse compartilhamento \cite{Xavier2013}.
+A camada de virtualização baseada em container possui uma performance muito superior à virtualização pura, segundo a pesquisa deles.
 
-Toda figura deve ser citada no texto, como nos exemplos que seguem.
+
+
+\subsection{Containers}
+
+A palavra \textit{container} ficou popularizada a partir de uma técnica de isolamento de recursos dentro de um sistema operacional baseado em UNIX, desde a release do sistema operacional Solaris 10 em 2005. A ideia era não somente restringir o acesso de recursos dentro deste container, mas também permitir uma proteção de recursos explicitamente dedicados à estes containers. Embora seja considerada como uma \textit{best practice} em desenvolvimento, a utilização de containers é bastante complexa e o mal uso pode levar à criação de aplicações com brechas de segurança, embora se pressuponha o contrário, diferente da facilidade que se tem com a utilização de máquinas virtuais (VM). Uma das implementações atuais de containers é o Linux Containers (LXC), que provê uma série de ferramentas que trabalham nativamente em sistemas operacionais baseado em UNIX para fornecer um ambiente semelhante ao que se obtêm com VM's, mas sem a sobrecarga de rodar um kernel separado e fazer simulação de hardware, através de utilização de namespaces, e \textit{control groups} \cite{LXC2016}.
+Recentemente, a utilização de containers se popularizou em meio ao desenvolvimento de computação para a nuvem por causa da nova ferramenta chamada \textit{Docker}, criada em 2013 e inicialmente baseada no LXC como um provedor de runtime. Segundo \cite{NICKOLOFF2016}, Docker é um conjunto de ferramentas e serviço que facilitam a criação e manipulação de containers dentro de um sistema baseado em UNIX. Com Docker, é possível ter todas as vantagens de utilização de containers, porém sem o alto custo de configuração e com containers fornecidos seguindo as melhores práticas. 
+
+\subsection{cgroups}
+Cgroups é uma configuração que faz parte do subsistema de kernel de sistemas baseado em UNIX, que fornece controle sobre recursos do sistema, como CPU, memória, rede, etc. O cgroups, ou control groups esta presente na implementação de containers de Docker e é utilizado como mecanismo base de gerenciamemnto de recursos \cite{NICKOLOFF2016}.
+
+% Substituir o uso de VM no autoelastic e fazer testes de viabilidade de containers no lugar
+% verificar vantagens e novas oportunidades que o autoelastic pode ter com containers.
+% Fazer um comparativo - Docker vale a pena?
+% Talvez modificar o formato de balanceamento de carga, já que containers podem ter menor custo.
+
+\subsection{Docker}
+O Docker, apesar de inicialmente utilizar o LXC como provedor de runtime, criou uma implementação própria de ferramenta para criação de containers, procurando resolver algumas limitações da implementação de LXC, como segurança e simplificação [ref]. 
+
+\subsection{Virtualização baseada em Hypervisor}
+Um \textit{hypervisor}, ou gerenciador de máquinas virtuais, é um programa que roda no sistema operacional host, fornecendo os recursos de hardware deste para uma série de máquinas virtuais, neste caso, estas máquinas virtuais compartilham o mesmo hardware. Como mostrado na figura~\ref{fig:vmvsdocker}, o hypervisor é responsável por fornecer o acesso aos recursos para cada sistema operacional dentro das máquinas virtuais, mas com o custo deste gerenciamento como processamento, já que a ferramenta procura fornecer comportamento fiel de hardware para as máquinas virtuais \cite{Zhang2016}.
+
+\subsection{Virtualização baseada em container}
+
+O termo \textit{containerização} é a forma popular para se referenciar à virtualização baseada em container, que permite o isolamento de determinados softwares, que são executados dentro do mesmo kernel no sistema operacional Linux, mas que diferentemente do hypervisor, não adiciona uma camada virtualização, na qual precisaria carregar um sistema operacional convidado \cite{Zhang2016}, como mostra a figura~\ref{fig:vmvsdocker}.
+\cite{Dua2014}
 
 \subsection{Figuras}
-A Figura~\ref{fig:escrita} ilustra as fases psicológicas da escrita da dissertação. Você vai se reconhecer no personagem. ;-)
+A Figura~\ref{fig:vmvsdocker} ilustra a diferença entre uma aplicação em uma camada de virtualização por Docker e VM.
 
 \begin{figure}
-	\caption{Fases psicológicas da escrita da dissertação}
-	\label{fig:escrita}
+	\caption{Docker vs Virtual Machine}
+	\label{fig:vmvsdocker}
 	\centering%
 	\begin{minipage}{.8\textwidth}
-		\includegraphics[width=\textwidth]{escrita}
+		\includegraphics[width=\textwidth]{vmvsdocker}
 		\fonte{\citetexto{Cham12}}
 	\end{minipage}
 \end{figure}
 
-\subsection{Tabelas}
-A Tabela~\ref{tab:estacoes} é um exemplo de tabela elaborada pelo(a) próprio(a) autor(a).
-
-\begin{table}
-	\caption{Período das estações do ano no Brasil}
-	\label{tab:estacoes}
+\begin{table}[!ht]
+	\caption{Características de VM e Containers}
+	\label{tab:table1}
 	\centering%
-	\begin{minipage}{.6\textwidth}
-		\begin{tabular*}{\textwidth}{ll}
+	\begin{center}
+		\begin{tabularx}{\textwidth}{|X|X|X|}
 			\hline
-			\textbf{Meses} & \textbf{Estações do Ano}\\
+			\textbf{Parametro} &\textbf{Máquinas Virtuais}\ &\textbf{Containers}\\
 			\hline
-			21 de março a 21 de junho & Outono\\
-			21 de junho a 23 de setembro & Inverno\\
-			23 de setembro a 21 de dezembro & Primavera\\
-			21 de dezembro a 21 de março & Verão\\
+			SO Convidado &Um hardware virtual é disponibilizado para cada VM, com um espaço de memória reservado. & Todos os convidados compartilham o mesmo SO, cada imagem é carregada para o espaço de memória do Kernel\\
+			Comunicação & Feita por dispositivos Ethernet & Utilização de mecanismos IPC como sinais, sockets, pipes\\
+			Segurança & Depende da implementação do fornecedor de Hypervisor & Utilização de mecanismos de controle de acesso\\
+			Desempenho & Irá receber uma sobrecarga pelo trabalho de tradução de instruções do sistema hospedeiro para o convidado & Containers fornecem um desempenho muito próximo ao nativo em comparação ao executado direto no hospedeiro\\
+			Isolamento & Não é possível compartilhar arquivos, bibliotecas e execução de programas entre as máquinas virtuais & Subdiretórios podem ser montados e compartilhados entre containers no mesmo hospedeiro\\
+			Tempo de início & Demora o tempo de processo de boot de um sistema operacional & Containers não fazem boot de sistema\\
+			Armazenamento & Software específicos de armazenamento e sistema de arquivos precisam ser instalados no convidado além de estarem no hospedeiro & O armazenamento em containers pode ser compartilhado com o hospedeiro\\
 			\hline
-		\end{tabular*}
-		\fonte{Elaborada pela autora.}
-	\end{minipage}
+		\end{tabularx}
+		\fonte{\cite{Dua2014}}
+	\end{center}
 \end{table}
 
-\section{Resumo}
-O resumo deve conter de 100 a 500 palavras. No resumo não deve haver citações e indica-se que essa seja a última seção do texto a ser escrita. Veja abaixo uma sugestão de organização e exemplo de resumo de \citetexto{Moro11}.
+\chapter{Trabalhos Relacionados}
 
-Sugestão (uma a três linhas para cada item):
-\begin{itemize}
-	\item Contexto geral e específico;
-	\item Questão/problema sendo investigado (propósito do trabalho);
-	\item Estado-da-arte (por que precisa de uma solução nova/melhor);
-	\item Solução (nome da proposta, metodologia básica sem detalhes, quais características respondem as questões iniciais, interpretação dos resultados, conclusões).
-\end{itemize}
+\section{AutoElastic}
 
-Exemplo (SANTOS et al., 2008 apud \citealp{Moro11}):
+Segundo a definição de \citetext{Facco2016} para a ferramenta AutoElastic:
 \begin{quote}
-CONTEXTO: A Web é abundante em páginas que armazenam  dados de forma implícita. PROBLEMA: Em muitos casos, estes dados estão presentes em textos semiestruturados sem a presença de delimitadores explícitos e organizados em uma estrutura também implícita. SOLUÇÃO: Este artigo apresenta uma nova abordagem para extração em textos semi-estruturados baseada em Modelos de Markov Ocultos (Hidden Markov Models - HMM). ESTADO-DA-ARTE e MÉTODO PROPOSTO: Ao contrário de outros trabalhos baseados em HMM, a abordagem proposta dá ênfase à extração de metadados, além dos dados propriamente ditos. Esta abordagem consiste no uso de uma estrutura aninhada de HMMs, onde um HMM principal identifica os atributos no texto e HMMs internos, um para cada atributo, identificam os dados e metadados. Os HMMs são gerados a partir de um treinamento com uma fração de amostras da base a ser extraída. RESULTADOS: Os experimentos realizados com anúncios de classificados retirados da Web mostram que o processo de extração alcança qualidade acima de 0,97 com a medida F, mesmo se esta fração de treinamento é pequena. 
-\end{quote}
+AutoElastic age como um \textit{middleware} permitindo que aplicações HPC iterativas obtenham vantagem do provisionamento de recursos dinâmico de uma infraestrutura de nuvem sem a necessidade de modificações no código fonte. AutoElastic oferece a elasticidade de forma automática, não sendo necessária a configuração de regras por parte do usuário.
+\end{quote} 
+O problema apresentado pelo trabalho é que muitas das abordagens atuais do mercado, para fornecer elasticidade em aplicações HPC, necessitam de uma intervenção do usuário para fazer tais configurações de elasticidade, ou seja, definir o momento em que serão adicionados ou removidos recursos disponíveis para a aplicação, seja por uma configuração estática de \textit{threshold} ou de uma configuração no código da aplicação. O desenvolvimento do \textit{middleware} AutoElastic permite um modelo transparente ao usuário em questão de configuração de parâmetros. O AutoElastic possui um protótipo executado pelo autor na plataforma de nuvem OpenNebula e obteve resultados de ganho de desempenho de até 59\% na execução de uma aplicação de integração numérica \textit{CPU-Bound}, quando comparada com outras soluções de elasticidade. 
 
-%=======================================================================
-% Exemplos de Citações e Referências Bibliográficas
-%=======================================================================
-\chapter{Exemplos de Citações e Referências Bibliográficas}
-\nobibliography* % para usar o \bibentry
-Neste capítulo são apresentados exemplos de citações e referências bibliográficas.  Aqui é utilizado o pacote \texttt{bibentry}, que permite a inserção de referências no meio do texto (atenção para a diferença entre citações e referências).
+\section{Utilizando Docker para Aplicações de Alto Desempenho}
 
-Você vai ver que, neste exemplo, não está sendo usado o estilo de referências bibliográficas do projeto ABNTeX\footnote{http://http://sourceforge.net/projects/abntex}.  Você é completamente livre para usá-lo (veja no início do arquivo .tex como fazer isso).  Os motivos para não usar o ABNTeX neste exemplo são basicamente dois:
-\begin{itemize}
-	\item Para usar o ABNTeX, é necessário instalá-lo em seu sistema \TeX\ primeiro; embora não seja uma tarefa tão complicada, enxergamos como uma dificuldade a mais para o usuário iniciante.  Nosso objetivo aqui é facilitar ao aluno da UNISINOS o uso deste modelo, de modo que basta copiar os arquivos \texttt{UNISINOSmonografia.cls} e \texttt{unisinos.bst} para a pasta onde estão seus arquivos .tex;
-	\item As normas da ABNT são tão complexas que, para atender a todas as variações possíveis de citações e referências, o projeto ABNTeX criou uma série de campos adicionais nas entradas do arquivo .bib.  Embora funcione para o caso ABNT, o efeito colateral de fazer isso é que o seu arquivo .bib será muitas vezes incompatível com os demais estilos tradicionais do BibTeX, como \texttt{plain}, \texttt{alpha}, \texttt{ieeetr}, entre outros.  Por exemplo, em referências a artigos publicados em conferências, o campo \texttt{organization} é usado pelo ABNTeX para definir o nome do evento.  Isso não é padrão e não será reconhecido pelos estilos tradicionais\footnote{Veja como criar seus arquivos .bib no manual do BibTeX, que pode ser encontrado em http://ctan.tug.org/tex-archive/biblio/bibtex/contrib/doc/btxdoc.pdf.}.  Considerando que um dos maiores benefícios do BibTeX é criar um arquivo .bib que pode ser reutilizado pelo resto da vida, nossa estratégia com o \texttt{unisinos.bst} foi tentar aproximar ao máximo a formatação exigida pela ABNT sem implicar na criação de arquivos .bib incompatíveis.  Isso funciona bem na grande maioria dos casos, mas não em todos.  Nesse caso, a saída é usar o ABNTeX ou então alterar manualmente o arquivo .bbl que é gerado ao rodar o comando \texttt{bibtex}.
-\end{itemize}
 
-Em caso de dúvida, siga as orientações do manual da Biblioteca \cite{Biblioteca11} e, se necessário, da norma NBR~6023 \cite{NBR6023:2002}.
-
-\section{Citações}
-As citações podem ocorrer de duas formas: com os nomes dos autores inseridos no texto ou não.  Isso implica em uma construção diferente para as frases.  Por exemplo:
-\begin{itemize}
-	\item Com o nome do autor inserido no texto: ``De acordo com \citetexto{Tanenbaum03}, o modelo de referência OSI foi proposto de forma tardia.''
-	\item Sem inserir o autor no texto: ``O modelo de referência OSI foi proposto de forma tardia \cite{Tanenbaum03}.''
-\end{itemize}
-
-\section{Livros}
-Seguem alguns exemplos de referências de livros:
-\begin{itemize}
-	\item \bibentry{Buford09}.
-	\item Livro com indicação de edição:\\
-	\bibentry{Kurose10ptbr}.
-\end{itemize}
-
-\section{Artigos em Periódicos}
-Os exemplos abaixo ilustram referências a artigos em periódicos.
-\begin{itemize}
-	\item \bibentry{Hayes08}.
-	\item \bibentry{Lawton08}.
-\end{itemize}
-
-\section{Artigos em Conferências}
-\begin{itemize}
-	\item \bibentry{Laadan10}.
-	\item \bibentry{Anderson95}.
-\end{itemize}
-
-\section{Teses e Dissertações}
-Seguem algumas referências a trabalhos acadêmicos, como teses, dissertações, trabalhos de conclusão de curso, etc.
-\begin{itemize}
-	\item \bibentry{Teixeira09}.
-	\item \bibentry{Flaumann05}.
-\end{itemize}
 
 %=======================================================================
 % Referências
