@@ -58,21 +58,21 @@ pela Universidade do Vale do Rio dos Sinos --- UNISINOS
 % à direita.  Mas a formatação é basicamente livre.  Só não se escreve
 % a palavra 'dedicatória'.
 %=======================================================================
-\begin{dedicatoria}
-Aos nossos pais.\\[4ex] % quebra a linha dando um espaçamento maior
-\begin{itshape} % faz o texto ficar em itálico
-If I have seen farther than others,\\
-it is because I stood on the shoulders of giants.\\
-\end{itshape}
---- \textsc{Sir Isaac Newton} % \textsc é o "small caps"
-\end{dedicatoria}
+%\begin{dedicatoria}
+%Aos nossos pais.\\[4ex] % quebra a linha dando um espaçamento maior
+%\begin{itshape} % faz o texto ficar em itálico
+%If I have seen farther than others,\\
+%it is because I stood on the shoulders of giants.\\
+%\end{itshape}
+%--- \textsc{Sir Isaac Newton} % \textsc é o "small caps"
+%\end{dedicatoria}
 
 %=======================================================================
 % Agradecimentos (opcional).
 %=======================================================================
-\begin{agradecimentos}
-Obrigado!
-\end{agradecimentos}
+%\begin{agradecimentos}
+%Obrigado!
+%\end{agradecimentos}
 
 %=======================================================================
 % Epígrafe (opcional).
@@ -81,10 +81,10 @@ Obrigado!
 % relacionada com a matéria tratada no corpo do trabalho. Podem, também,
 % constar epígrafes nas folhas de aberturas das seções primárias.''
 %=======================================================================
-\begin{epigrafe}
-``\textit{Ninguém abre um livro sem que aprenda alguma coisa}''.\\
-(Anônimo)
-\end{epigrafe}
+%\begin{epigrafe}
+%``\textit{Ninguém abre um livro sem que aprenda alguma coisa}''.\\
+%(Anônimo)
+%\end{epigrafe}
 
 %=======================================================================
 % Resumo em Português.
@@ -157,48 +157,34 @@ A definir
 %=======================================================================
 \chapter{Introdução}
 
-% as epígrafes nos capítulos são opcionais
 
-%\epigrafecap{The reasonable man adapts himself to the world; the unreasonable one persists in trying to adapt the world to himself. Therefore all progress depends on the unreasonable man.}{George Bernard Shaw}
+Uma das características mais importantes da computação em nuvem é a elasticidade de recursos. Ou seja, a capacidade do ambiente computacional aumentar ou diminuir os recursos demandados pelo usuário. Como recursos, podemos entender tudo aquilo que representa poder computacional, como CPU, memória, rede e largura de banda. Também se apresentam na forma de instâncias de máquinas virtuais e nós de computação \cite{Bender2014}. O interesse na capacidade de elasticidade de uma aplicação está relacionado aos benefícios que esta poderá proporcionar ao usuário, como uma melhoria de desempenho e melhor utilização dos recursos, permitindo uma economia de custos. 
 
-%Conforme \citetexto{Hexsel11}, a introdução tem o objetivo de ``\emph{introduzir} o material que vai ser apresentado em mais detalhe nas seções subseqüentes''. Na introdução você deve contextualizar o problema e mostrar por que vale a pena resolvê-lo. Você deve apresentar a solução proposta e mostrar o seu diferencial em relação aos trabalhos relacionados. Observe, porém, que na introdução você deve apenas tratar do O QUÊ e PORQUÊ, sem tratar do como \cite{Hexsel11}, que deve ser explicado na seção que descreve o trabalho desenvolvido.
+Uma das técnicas para se otimizar o desempenho de aplicações elásticas é a alocação dinâmica de recursos, o que permite o provisionamento de recursos quando a aplicação está necessitando, além da liberação de recursos adicionais, quando esta mesma está operando de forma moderada. A estratégia de elasticidade irá depender do objetivo do usuário, que por exemplo, em um cenário de aplicações de Computação de Alto desempenho, ou \textit{High Performance Computing} (HPC), pode requisitar um aumento de poder computacional para executar uma determinada tarefa em um tempo menor. Por outro lado, se a execução não requer uma grande quantidade de recursos e nem um tempo mais curto de processamento, a quantidade recursos pode ser reduzida, o que resultaria em uma relação mais favorável de \textit{recursos x horas} para este caso, já que a questão é a economia de recursos.
+
+No contexto de aplicações HPC iterativas, existem inúmeros casos de utilização em várias áreas, como ciência, economia e engenharia. Independente do objetivo, é possível afirmar que, dentre outras características diversas que podem apresentar, o desempenho e isolamento são características fundamentais para tais aplicações. \textit{Clusters} de HPC são apropriadamente utilizados para a execução destas aplicações, que são compartilhadas entre usuários de diferentes institutos, que utilizam os recursos para diferentes fins e diferentes requerimentos em questões de configuração de software e recursos. 
+
+O estado-da-arte atual mostra que uma das abordagens mais comuns de elasticidade é a replicação de máquinas virtuais, quando um determinado \textit{threshold} de uma determinada métrica é atingido, uma nova instância é requisitada e fornecida pelo gerenciador. Dessa forma, ambientes de HPC se beneficiam de utilização de tecnologias de virtualização para fornecer ambientes customizados para as necesisadades e compartilhamento de recursos. Entretanto, aplicações de alto desempenho somente serão capazes de se beneficiar da utilização de ambientes virtualizados se não houver um \textit{overhead} substancial de desempenho (CPU, memória, disco e rede) \cite{Xavier2013}. No geral, estudos realizados mostram que os métodos tradicionais de virtualização, como Xen, VMWare e KVM possuem um overhead significativo de desempenho, o que dificulta a sua utilização em aplicações HPC. 
+
+Algumas implementações recentes de virtualização baseada em containers, como Linux-Vserver, OpenVZ e Linux Containers (LXC) oferecem uma camada leve de virtualização, com a promessa de desempenho muito próximo ao nativo, devido à sua arquitetura. As implementações permitem a inserção de uma camada de abstração na Infraestrutura como Serviço (IaaS), isto abre oportunidades para aplicação de Plataformas como serviço (PaaS) que façam uso destas vantagens da virtualização baseada em containers. Sendo assim, este artigo argumenta que a virtualização baseada em containers pode fornecer um melhor aproveitamento de recursos para aplicações que rodam em ambientes HPC e também irá apresentar uma proposta de implementação desta tecnologia para aprimorar modelos de elasticidade de aplicações HPC no nível de Plataforma como Serviço.
 
 
 % Palavras-chave pesquisadas?
 % docker virtual machine, container high performance computing, scalablity elasticity, hpc application container, virtualization containers.
 
-No contexto de aplicações HPC iterativas, existem inúmeros casos de utilização, mas substancialmente o desempenho e isolamento são características necessárias para tais aplicações. \texit{Clusters} de HPC são apropriadamente utilizados para a execução destas aplicações, que são compartilhadas entre usuários de diferentes institutos, que utilizam os recursos para diferentes fins e diferentes requerimentos em questões de configuração de software e recursos. Dessa forma, tais plataformas se beneficiam de utilização de tecnologias de virtualização para fornecer ambientes customizados para as necesisadades e compartilhamento de recursos. Entretanto, aplicações de alto desempenho somente serão capazes de se beneficiar da utilização de ambientes virtualizados se não houver um overhead substancial de desempenho (CPU, memória, disco e rede) \cite{}. 
-We presented container-based virtualization as an
-lightweight alternative to hypervisors in HPC context. As we
-have shown, there are useful usage cases in HPC where both
-performance and isolation are need. In that way, we conducted
-experiments to evaluate the current Linux containerbased
-virtualization implementations and compare them to
-Xen, a commonly used hypervisor-based implementation.
-HPC clusters are typically shared among many users or
-institutes, which may have different requirements in terms
-of software packages and configurations. As presented, such
-platforms might benefit from using virtualization technologies
-to provide better resource sharing and custom environments.
-However, HPC will only be able to take advantage
-of virtualization systems if the fundamental performance
-overhead (such as CPU, memory, disk and network) is
-reduced. \cite{Xavier2013}
-
 \section{Questão de Pesquisa}
-Um dos grandes pontos a serem discutidos, no que diz respeito à implementação de um tratamento automático para a elasticidade, é a questão da análise do comportamento da aplicação. A qual oferece seus próprios obstáculos a serem transpostos. Uma técnica de auto-escalonamento que tenta antecipar os requisitos futuros de uma aplicação, baseado na análise de seu desempenho, é portanto, uma abordagem preditiva. Na literatura, este tema tem sido discutido sob diversos pontos de vista, como nos mostra o trabalho de \cite{Lorido-botr2012}. Algumas das técnicas sugeridas apresentam tanto uma natureza reativa quanto proativa, enquanto outras são excencialmente proativas. A análise preditiva baseada em séries temporais é identificada por \cite{Lorido-botr2012} como uma destas estratégias que têm uma abordagem puramente proativa. Uma série temporal é uma coleção de observações, as quais podem ser discretizadas ou não, feitas sequencialmente ao longo de um período de tempo. Ou como definido por \cite{Shumway2000}, séries temporais podem ser definidas como uma coleção de variáveis aleatórias indexadas de acordo com a ordem em que elas são obtidas no tempo. 
 
+Aplicações HPC exigem que o ambiente em que estão sendo executadas, normalmente um cluster privado com recursos limitados, forneça a capacidade para executar os processos com máxima eficiência. Porém, estes ambientes encaram um problema de balanço entre alocação eficiente de recursos e o tempo mínimo de execução para aplicações HPC. Esta sobrecarga ocorre porque para cada máquina virtual (VM) criada, necessita-se a instalação de um sistema operacional convidado (\textit{Guest OS}), alocado pelo \textit{hypervisor}, esta abordagem requer recursos de mémória e utiliza parte dos recursos que poderiam estar sendo utilizados pelas aplicações HPC \cite{Adufu2015}.
 
-\begin{itemize}
-	\item \textbf{Contexto e motivação:} 
+Aplicações HPC iterativas são, em sua maioria e independente da aplicabilidade, algoritmos estruturados em laços iterativos (\textit{loops}), que representam um estado global consistente a cada iteração no laço \cite{Facco2016}. Para uma aplicação HPC, questões de desempenho são fundamentais, em certos casos, a diferença de alguns milisegundos é o suficiente para distinguir uma aplicação lenta de uma rápida. A ideia é que os modelos de elasticidade possam ser executados sem realizar impacto significativo na execução da aplicação, fornecendo recursos necessários da forma mais eficiente possível. Tendo em vista o \textit{overhead} que a utilização de máquinas virtuais podem acrescentar no desempenho de uma aplicação HPC iterativa, podendo também olhar para a elasticidade que containers oferecem, o trabalho aqui disposto busca responder a seguinte questão:
 
-
-	\item \textbf{Problema:}Considerando o cenário atual de aplicações HPC iterativas, bem como a elasticidade que containers oferecem, o trabalho aqui disposto busca responder a seguinte questão:
 	\textit{Como seria o modelo de elasticidade em nuvem adaptado para o uso de containers para aplicações HPC iterativas, que possa gerar um ganho significativo de economia de recursos?} 
-	\item \textbf{Objetivos:} 
+
+
+\section{Objetivos} 
 	O objetivo geral deste trabalho é:
 	\begin{itemize}
-		\item Desenvolver um modelo de elasticidade automática adaptada para uso de containers, para aplicações de Computação de Alto Desempenho, em ambientes de computação em nuvem, com foco em otimizar a utilização de recursos, em comparação ao método de elasticidade automática baseado em virtualização de máquinas.  
+		\item Desenvolver um modelo de elasticidade automática adaptada para uso de containers, para aplicações de Computação de Alto Desempenho, em ambientes de computação em nuvem, com foco em otimizar a utilização de recursos, em comparação ao método de elasticidade automática que utilizam virtualização de recursos baseada em \textit{hypervisor}.  
 	\end{itemize}
 	Para atingir o objetivo acima citado, temos os seguintes objetivos secundários:
 	\begin{itemize}
@@ -208,7 +194,12 @@ Um dos grandes pontos a serem discutidos, no que diz respeito à implementação
 		\item Realizar testes em laboratório, utilizando a aplicação desenvolvida e confrontando modelo de estado da arte e modelo proposto;
 		\item Desenvolver melhoria para o algoritmo de instantiação de recursos para melhor uso de containers.
 	\end{itemize}
-\end{itemize}
+
+\section{Organização do Texto}
+
+Esta monografia está organizada em cinco seções. Primeiramente, na seção \ref{fundamentacao}, iremos revisar questões fundamentais a respeito da área da computação em nuvem, e as definições que relevantes ao propósito deste trabalho. Uma retomada dos tópicos relacionados à virtualização faz necessária, bem como questões gerais sobre a utilização de containers e tecnologias disponíveis. Na seção \ref{related}, iremos avaliar trabalhos correlatos na área, e suas contribuições para modelos de elasticidade de aplicações HPC. Além disto, será feita uma análise de trabalhos que comparam diferentes modelos de virtualização e as oportunidades da utilização de containers. Esta avaliação tomará como objetivo traçar uma comparação das soluções propostas, suas divergências e convergências, com o intuito de identificar lacunas e oportunidades
+de trabalho na literatura analisada. A seção \ref{model} trará o modelo proposto, descrevendo sua arquitetura e metodologia para avaliação. Finalmente, a conclusão será apresentada na seção \ref{conclusion}, com detalhamento das contribuições esperadas e
+um cronograma para o projeto.
 
 %var/lib/one/ apps
 
@@ -217,8 +208,12 @@ Um dos grandes pontos a serem discutidos, no que diz respeito à implementação
 % Fundamentação Teórica
 %=======================================================================
 \chapter{Fundamentação Teórica}
+\label{fundamentacao}
+
+Este capítulo irá abordar as principais definições relacionadas ao conceito de Computação em Nuvem, levando em consideração o estado atual na área. Serão apresentados também conceitos necessários ao entendimento das motivações do projeto e como o modelo a ser desenvolvido será definido. Na seção \ref{cloud} será apresentado os conceitos e características de Computação em Nuvem, seguido posteriormente, na sessão \ref{elastic}, por uma definição de elasticidade e escalabidade. Na sessão \ref{docker} será apresentado os conceitos relevantes ao entendimento da tecnologia de containers e a ferramenta mais utilizada no mercado atual, o Docker. Para finalizar o capítulo, na sessão \ref{virtualization} será traçado um comparativo entre as alternativas de virtualização: por máquinas virtuais ou containers. 
 
 \section{Computação em Nuvem}
+\label{cloud}
 Segundo a definição do National Institute of Standards and Technologies (NIST) \cite{Mell2012}, a computação em nuvem é um modelo que permite o acesso de recursos computacionais configuráveis e compartilhados, de forma conveniente, ubíqua e sob demanda, capazes de ser provisionados e entregues com baixo custo de gerenciamento e sem a intervenção de um provedor de serviços. Tais recursos podem ser: redes, servidores, serviços, armazenamento, aplicações, etc. Tais recursos são tipicamente fornecidos no modelo \textit{pay-as-you-go}, ou seja, você paga de acordo com a demanda de recursos solicitada \cite{Suleiman2012}. Sendo assim, a computação em nuvem se utiliza de mecanismos para escalar estes recursos conforme necessidade, através de algoritmos que irão trabalhar no balanceamento de carga rapidamente para diminuir o desperdício de recursos computacionais.
 Algumas abordagens deixam o gerenciamento de balanceamento de carga e recursos por conta da aplicação, que se faz uso de API (\textit{Application Program Interface}) para definir por meio de codificação dentro da própria implementação o controle. Esta abordagen requer que a implementação tenha consciência dos pontos específicos de implementação do controle, o que pode fugir do foco principal do programa. Outras tecnologias oferecem um mecanismo externo à aplicação para o controle de recursos utilizados, deixando para a aplicação apenas determinar os pontos de chamada de sistema para reorganizações necessárias na topologia de comunicação. 
 Podemos resumir a computação em nuvem para cinco características essenciais, além de três modelos de serviço e quatro modelos de implantação, conforme descritos em seguida \cite{Verdi2010}.
@@ -263,12 +258,15 @@ Os modelos de implantação definem como se dará o acesso e diponibilidade da c
 
 % TODO: Diferenciar elasticidade e escalabilidade
 \section{Elasticidade vs Escalabilidade}
+\label{elastic}
 
 A escalabilidade de uma aplicação se diz respeito à quantidade de usuários que ela pode manter conectados ao mesmo tempo, sendo o limite de escalabidade o ponto em que esta não pode suportar mais usuários conectados sem apresentar a mesma  eficiência \cite{Wilder12}. Uma aplicação pode ter a sua escalabilidade estendida através do fornecimento de recursos de \textit{hardware} adicionais, como memória, CPU, largura de banda, etc. No contexto de uma aplicação HPC, uma escalabilidade não se detêm apenas ao número de usuários suportados, mas também ao tipo de processamento que a aplicação precisa executar e que pode precisar de recursos adicionais para continuar desempenhando de forma efetiva. Dessa forma, um sistema é dito escalável quando seu desempenho não se degrada significantemente com o aumento dos usuários ou carga.
 Segundo \citetexto{Taurion2012}, elasticidade é a capacidade do ambiente computacional da nuvem aumentar ou diminuir de forma automática os recursos computacionais demandados e provisionados para cada usuário. É a escalabilidade em duas direções: tanto cresce quanto diminui a capacidade ofertada. Os dois termos podem ser confundidos, já que dizem respeito à adaptação de recursos conforme demanda, porém a escalabilidade é relativa à capacidade manter o desempenho conforme a demanda, já a elasticidade é a capacidade de fazer os recursos se adpatem à carga, seja para aumentar ou diminuir. 
 Iremos adotar a definição de \citetexto{coutinho2013elasticidade} que diz que a elasticidade é a ``Capacidade de adicionar e remover recursos de forma automática de acordo com a carga de trabalho sem interrupções e utilizando os recursos de forma otimizada.``.
 
 \section{Docker}
+\label{docker}
+
 O Docker, apesar de inicialmente utilizar o LXC como provedor de runtime, criou uma implementação própria de ferramenta para criação de containers, procurando resolver algumas limitações da implementação de LXC, como segurança e simplificação [ref].
 Alguns dos termos chave para compreender a tecnologia são descritos abaixo \cite{whitepaperDocker2016}:  
 
@@ -292,6 +290,7 @@ Cgroups é uma configuração que faz parte do subsistema de kernel de sistemas 
 Chroot (\textit{change root}) é um comando Linux para mudar o diretório root do processo corrente e seus processos aninhados para um novo diretório. Alguns containers utilizam este comando para isolar e compartilhar o sistema de arquivos entre os ambientes containerizados \cite{Dua2014}. 
 
 \section{Virtualização vs Containerização}
+\label{virtualization}
 
 Uma camada de virtualização pode ajudar a isolar um ambiente compartilhado de computadores. Em clusters de HPC, normalmente os recursos são compartilhados entre mais usuários e isto faz com que possa ocorrer problemas nesse compartilhamento \cite{Xavier2013}.
 A camada de virtualização baseada em container possui uma performance muito superior à virtualização pura, segundo a pesquisa deles.
@@ -345,9 +344,17 @@ A Figura~\ref{fig:vmvsdocker} ilustra a diferença entre uma aplicação em uma 
 \end{table}
 
 \chapter{Trabalhos Relacionados}
+\label{related}
 Neste capítulo iremos ver um estudo de diversos trabalhos, os quais trazem soluções para elasticidade para aplicações de alto desempenho, bem como estudos comparativos entre a utilização de máquinas virtuais e containers. Serão apresentados os detalhes cada trabalho no início, e ao término do capítulo será feito uma comparação entre as abordagens.
 
+\section{Seleção de Trabalhos}
+
+A seleção de trabalhos relacionados, bem como outras referências para esta monografia, foi realizada através de uma pesquisa em diversas bases de dados de artigos científicos de Ciências Exatas, como o site da IEEE, ACM Digital Library e Springer Link. Também foram consultadas bases de dados nacionais, como o Portal de Periódicos CAPES/MEC e também a base de dados Biblioteca Unisinos. 
+Para a realização das pesquisas nessas diversas bases de dados, foram utilizadas buscas com estas principais palavras-chave: \textit{docker virtual machine, container high performance computing, scalablity elasticity, hpc application container, virtualization containers, cloud computing elasticity}. O resultado dessas pesquisas foi analisado com o intuito de encontrar trabalhos que explorassem a utilização de containers em ambientes de cloud computing, bem como as alternativas e implementações de elasticidade em aplicações HPC. Na sessão \ref{autoelastic} foi selecionado um trabalho que implementa um modelo de elasticidade para aplicações HPC, fornecendo recursos para a aplicação de forma dinâmica, através de provisionamente de máquinas virtuais em nodos de computação, conforme a demanda da aplicação \cite{7090978}. Nas sessões subsequentes, (\ref{trabdocker}) foram selecionados trabalhos que utilizam containers para implementação de ambientes de HPC e que traçam um comparativo da utilização de máquinas virtuais e containers. 
+Por fim, na sessão \ref{comparison}, é realizado um comparativo dos trabalhos encontrados, bem como uma conclusão acerca das possibilidades, tendo em vista a análise do modelo já implementado, o AutoElastic, e as lacunas encontradas.
+
 \section{AutoElastic}
+\label{autoelastic}
 
 Segundo a definição de \citetext{Facco2016} para a ferramenta AutoElastic:
 \begin{quote}
@@ -356,6 +363,7 @@ AutoElastic age como um \textit{middleware} permitindo que aplicações HPC iter
 O problema apresentado pelo trabalho é que muitas das abordagens atuais do mercado, para fornecer elasticidade em aplicações HPC, necessitam de uma intervenção do usuário para fazer tais configurações de elasticidade, ou seja, definir o momento em que serão adicionados ou removidos recursos, através de manipulação de máquinas virtuals, disponíveis para a aplicação, seja por uma configuração estática de \textit{threshold} ou de uma configuração no código da aplicação. O desenvolvimento do \textit{middleware} AutoElastic permite um modelo transparente ao usuário em questão de configuração de parâmetros. O AutoElastic possui um protótipo executado pelo autor na plataforma de nuvem OpenNebula e obteve resultados de ganho de desempenho de até 59\% na execução de uma aplicação de integração numérica \textit{CPU-Bound}, quando comparada com outras soluções de elasticidade. 
 
 \section{Utilizando Docker para Aplicações de Alto Desempenho}
+\label{trabdocker}
 A definir
 
 \section{Virtualization vs Containerization to support PaaS}
@@ -377,6 +385,11 @@ Os experimentos feitos pelo autor utilizaram programas de avaliação de desempe
 %Melhorar
 Concluo que o aproveitamento máximo de recursos, utilizando uma camada de virtualização de fácil implementação e não muito dependente do sistema operacional é objetivo de um ambiente próprio para execução de aplicações de alto desempenho. Portanto, os trabalhos analisados deixaram uma lacuna em relação a esta questão por não apresentarem uma solução que utilize uma tecnologia mais eficiente para processamento do que máquinas virtuais para alocação de recursos em aplicações de alto desempenho. Alguns trabalhos abordaram o uso de containers para aplicações de alto desempenho, porém apenas executando programas de testes para comprovar a possibilidade de uso, sem aplicar em infraestrutura que possa fornecer os recursos para as aplicações. O objetivo do trabalho que traz o AutoElastic de \citetexto{Facco2016}, juntamente com a possibilidade de se otimizar a utilização de recursos utilizando containers é o que justificou a abordagem tomada por este presente trabalho.
 
+%=======================================================================
+% Modelo
+%=======================================================================
+\chapter{Modelo}
+\label{model}
 
 \section{Questões de projeto}
 Objetivo deste trabalho é propor uma melhoria para o modelo de elasticidade em nuvem para aplicações HPC iterativas (AutoElastic). A partir da substituição do componente de criação de recursos com a criação de máquinas virtuais por containers, espera-se atingir uma melhoria no tempo de espera para se ter os recursos computacionais disponíveis após a requisição. Com os resultados, será analisado em que situações os containers tem um desempenho melhor, podendo propor uma abordagem diferente de ação quando se atinge os \textit{thresholds}, fazendo o melhor uso da tecnologia. Portanto, o modelo proposto tem como escopo somente trabalhar nos recursos computacionais fornecidos para o modelo AutoElastic. 
@@ -384,30 +397,18 @@ Objetivo deste trabalho é propor uma melhoria para o modelo de elasticidade em 
 %TODO
 Desenvolver um modelo de elasticidade automática adaptada para uso de containers, para aplicações de Computação de Alto Desempenho, em ambientes de computação em nuvem, com foco em otimizar a utilização de recursos, em comparação ao método de elasticidade automática baseado em virtualização de máquinas.
 
-No início deste trabalho propusemos a seguinte questão de pesquisa: a análise de séries temporais pode ser usada para encontrar padrões na carga de trabalho de uma aplicação, com o intuito de prever valores futuros, de forma que ofereça subsídios para a implementação de uma solução de elasticidade proativa? Neste ponto de nossos estudos, podemos afirmar com certeza que sim. Mas descobrimos que a pergunta pode e deve ser ampliada, para sabermos se é possível o uso de análise de séries temporais, utilizando-se de um modelo probabilístico que apresente alto grau de exatidão em suas predições e que tenha um bom desempenho, o qual nos permita utilizá-lo em tempo de execução sem um aumento acentuado de overhead.
+No início deste trabalho propusemos a seguinte questão de pesquisa: Como seria o modelo de elasticidade em nuvem adaptado para o uso de containers para aplicações HPC iterativas, que possa gerar um ganho significativo de economia de recursos? Sabemos, até o ponto deste estudo, que é possível sim ter um ambiente virtualizado utilizando containers, que pode substituir um ambiente com virtualização baseada em \textit{hypervisor}. Mas para responder a pergunta por completo, ou seja, identificar o ganho de economia de recursos e de desempenho, é necessário fazer ajustes baseados no desempenho do modelo após a substituição do componente, sempre se preocupando em que se permita utilizá-lo em tempo de execução sem um aumento acentuado de overhead.
 
-Para que se possa manter o foco no real propósito deste trabalho, iremos abstrair as questões que permeiam a proposta e não são inerentemente fundamentais para a construção do módulo de predição. Sendo assim, como resultado deste modelo não teremos uma implementação genérica ou adaptável, ou ao menos esta não será uma preocupação de projeto, visto que os objetivos principais são o tempo de processamento e exatidão dos resultados. O escalonamento empregado será vertical e a única dimensão analisada o poder de processamento, pois estes itens são suficientes para que cumpramos os objetivos a que nos propusemos no início deste trabalho. 
+Para que se possa manter o foco no real propósito deste trabalho, partiremos do modelo atual do AutoElastic, que já possui uma implementação definida como protótipo. Sendo assim, como resultado deste modelo não teremos uma implementação genérica ou adaptável, ou ao menos esta não será uma preocupação de projeto, visto que os objetivos principais são o ganho de desempenho em comparação ao modelo atual, a substituição do componente de virtualização será feita utilizando as mesmas tecnologias empregadas. 
 
-Não será criada uma API detalhada neste momento. E até mesmo os resultados da predição não receberão um tratamento para serem consumidos por uma ou outra plataforma específica. Pois entendemos que estas são questões secundárias, e não influenciam no propósito principal do trabalho. Optando assim por manter baixa a complexidade do projeto. E de igual forma, usaremos uma plataforma de cloud arbitrária que julgarmos mais apropriada para a coleta dos dados, sem preocupação com compatibilidade com outras pelos mesmos motivos já descritos nesta seção.
+Não será criada uma API detalhada neste momento. E até mesmo os resultados da comparação não receberão um tratamento para serem consumidos por uma ou outra plataforma específica. Pois entendemos que estas são questões secundárias, e não influenciam no propósito principal do trabalho. Optando assim por manter baixa a complexidade do projeto. E de igual forma, usaremos uma plataforma de cloud arbitrária que julgarmos mais apropriada para a execução dos testes com o modelo, sem preocupação com compatibilidade com outras pelos mesmos motivos já descritos nesta seção.
 
 \section{Arquitetura}
 
-Tal como mencionado na seção anterior, não nos preocuparemos com as questões periféricas que não têm uma influência direta sobre o propósito do trabalho. Sendo assim, não definiremos neste momento o formato da saída do nosso projeto. Assim como a escolha da plataforma de virtualização não será feita neste momento, pois se faz necessário alguns testes para avaliação. Basta, entretanto afirmar que o projeto será executado com o auxílio de uma plataforma de nuvem que forneça uma API para coleta dos dados de utilização das VMs, mais especificamente os dados de processamento. E priorizaremos na escolha a API com um bom desempenho neste processo.
-
-Em termos gerais a arquitetura do projeto contará com cinco módulos:
-
-\begin{itemize}
-	\item Módulo de captura, responsável pela comunicação com a ferramenta que fornecerá os dados de utilização da VM. Trata-se de um módulo relativamente simples, o qual tem como objetivo somente a comunicação com o sistema terceiro e a formatação dos dados para que sejam utilizados pelo sistema de predição.
-	\item Módulo de tratamento dos dados que se destina a preparar as informações coletadas, para que sejam submetidas aos algoritmos de predição que serão testados. Dentre os procedimentos que serão desenvolvidos por este módulo estarão testes de validação, para garantir que a série seja adequada para os algoritmos aos quais será submetida. Também um tratamento para outliers será utilizado, com o intuito de evitar discrepâncias nas predições em decorrência da existência de valores atípicos na série examinada.
-	\item Módulo de modelos probabilísticos, o qual provê a implementação de alguns dos algoritmos que iremos examinar. Este módulo recebe como entrada a série tratada e a submete aos modelos disponíveis, tendo como saída o resultado de suas previsões. A quantidade de modelos implementados irá depender de nossos testes de exatidão.
-	\item Módulo de avaliação de precisão que objetiva analisar as previsões a partir de um indicador de aderência de previsão. E então escolher aquele que melhor modela o comportamento da aplicação submetida à análise.
-	\item Módulo de exportação o qual é a última camada da aplicação, destinado a preparar os dados para a saída. É um módulo simples, com o intuito de definir um formato de apresentação para os dados da série de previsão.
-\end{itemize}
+TODO
 
 \section{Metodologia de Avaliação}
-O processo de avaliação se dará em dois momentos: a avaliação dos resultados de previsão por indicadores e a avaliação da aplicação frente aos objetivos a que o projeto se propôs. Teremos uma avaliação em tempo de execução através do \textit{módulo de avaliação de precisão}, descrito na seção anterior. Neste ponto nos utilizaremos de um indicador de aderência de previsão. O indicador escolhido será o \textit{Theil's U}, que é uma medida relativa a precisão que compara os resultados previstos com os dados históricos mínimos, analisando a aderência dos valores da previsão aos da tendência da série. Este índice também auxilia na eliminação de métodos que apresentem grandes erros \cite{Shumway2000}. Ele funcionará como um indicador constante de qualidade, avaliando em tempo real a exatidão das previsões, e portanto, podendo adaptá-las no caso de haver necessidade de fazê-lo. Além desta avaliação também utilizaremos a média de erro absoluto percentual (\textit{MAPE}), que também é conhecido como média de desvio percentual absoluto. É uma medida da precisão de um método para o cálculo dos valores de séries temporais, também relacionado à análise de tendência, e é geralmente expresso como uma percentagem de precisão.
-
-O segundo momento de avaliação se refere a avaliação do modelo frente aos objetivos do projeto. Tendo em vista que buscamos um alto grau de exatidão das previsões, juntamente com um tempo de execução que não acrescente overhead significativo, a avaliação da aderência do modelo à sua proposta se utilizará dos indicadores descritos no parágrafo anterior, e dos tempos de processamento de diferentes amostras de carga (\textit{workload}) de dados da VM. Em termos gerais, o tempo de processamento e resposta do módulo de previsão não pode ser superior a janela de tempo necessária para implementar as mudanças sugeridas por ele. A resposta deve ser fornecida antes do período em que as mudanças devem ser aplicadas.
+TODO
 
 
 
@@ -415,6 +416,8 @@ O segundo momento de avaliação se refere a avaliação do modelo frente aos ob
 % CONCLUSÃO
 %=======================================================================
 \chapter{Conclusão}
+\label{conclusion}
+
 TBD
 \section{Cronograma}
 Abaixo encontramos uma tabela com a relação de atividades previstas para o desenvolvimento deste trabalho, com um planejamento das suas respectivas datas de execução.
