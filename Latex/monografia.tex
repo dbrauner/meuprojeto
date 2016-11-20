@@ -324,23 +324,22 @@ A Figura~\ref{fig:vmvsdocker} ilustra a diferença entre uma aplicação em uma 
 \begin{table}[!ht]
 	\caption{Características de VM e Containers}
 	\label{tab:table1}
-	\centering%
-	\begin{center}
-		\begin{tabularx}{.8\textwidth}{|X|X|X|}
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{|l|l|l|}
 			\hline
 			\textbf{Parametro} &\textbf{Máquinas Virtuais}\ &\textbf{Containers}\\
 			\hline
-			SO Convidado &Um hardware virtual é disponibilizado para cada VM, com um espaço de memória reservado. & Todos os convidados compartilham o mesmo SO, cada imagem é carregada para o espaço de memória do Kernel\\
-			Comunicação & Feita por dispositivos Ethernet & Utilização de mecanismos IPC como sinais, sockets, pipes\\
-			Segurança & Depende da implementação do fornecedor de Hypervisor & Utilização de mecanismos de controle de acesso\\
-			Desempenho & Irá receber uma sobrecarga pelo trabalho de tradução de instruções do sistema hospedeiro para o convidado & Containers fornecem um desempenho muito próximo ao nativo em comparação ao executado direto no hospedeiro\\
-			Isolamento & Não é possível compartilhar arquivos, bibliotecas e execução de programas entre as máquinas virtuais & Subdiretórios podem ser montados e compartilhados entre containers no mesmo hospedeiro\\
-			Tempo de início & Demora o tempo de processo de boot de um sistema operacional & Containers não fazem boot de sistema\\
-			Armazenamento & Software específicos de armazenamento e sistema de arquivos precisam ser instalados no convidado além de estarem no hospedeiro & O armazenamento em containers pode ser compartilhado com o hospedeiro\\
+			SO Convidado & \begin{tabular}[c]{@{}l@{}}Um hardware virtual é disponibilizado para cada VM, \\ com um espaço de memória reservado.\end{tabular} & \begin{tabular}[c]{@{}l@{}}Todos os convidados compartilham o mesmo SO,\\cada imagem é carregada para o espaço de memória \\do Kernel \end{tabular}\\ \hline
+			Comunicação & Feita por dispositivos Ethernet & Utilização de mecanismos IPC como sinais, sockets, pipes\\ \hline
+			Segurança & Depende da implementação do fornecedor de Hypervisor & Utilização de mecanismos de controle de acesso\\ \hline
+			Desempenho & \begin{tabular}[c]{@{}l@{}}Irá receber uma sobrecarga pelo trabalho de tradução\\de instruções do sistema hospedeiro para o convidado\end{tabular}  &\begin{tabular}[c]{@{}l@{}}Containers fornecem um desempenho muito próximo ao \\nativo em comparação ao executado direto no hospedeiro\end{tabular} \\ \hline
+			Isolamento &\begin{tabular}[c]{@{}l@{}} Não é possível compartilhar arquivos, bibliotecas e \\execução de programas entre as máquinas virtuais  \end{tabular} & \begin{tabular}[c]{@{}l@{}}Subdiretórios podem ser montados e compartilhados \\ entre containers no mesmo hospedeiro \end{tabular} \\ \hline
+			Tempo de início & \begin{tabular}[c]{@{}l@{}} Demora o tempo de processo de boot de um \\ sistema operacional \end{tabular} & Containers não fazem boot de sistema\\ \hline
+			Armazenamento & \begin{tabular}[c]{@{}l@{}}Software específicos de armazenamento e sistema \\de arquivos precisam ser instalados no convidado \\além de estarem no hospedeiro\end{tabular} & \begin{tabular}[c]{@{}l@{}} O armazenamento em containers pode ser \\ compartilhado com o hospedeiro \end{tabular} \\ 
 			\hline
-		\end{tabularx}
+		\end{tabular}}
 		\fonte{\cite{Dua2014}}
-	\end{center}
 \end{table}
 
 \chapter{Trabalhos Relacionados}
@@ -391,6 +390,23 @@ Em resumo dos testes executados, utizando aplicações de \textit{benchmark} com
 O trabalho conduzido indicou que sistemas baseados em containers são mais eficientes que sistemas baseados em máquinas virtuais, além de possuir um gerenciamento de memória mais eficiente entre as aplicações executadas em paralelo, o que o torna uma solução mais atrativa para o desenvolvimento de ambientes para aplicações HPC.
 
 \section{Comparativo dos trabalhos relacionados}
+Nesta sessão, irei mostrar esta tabela.
+
+\begin{table}[]
+\centering
+\caption{My caption}
+\label{my-label}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+\textbf{Trabalho} & \textbf{Tecnologia}  & \textbf{Elasticidade} & \textbf{Base de Comparação}     & \textbf{Métricas}                                                                   & \textbf{Plataforma}  & \textbf{Testes}                                                              \\ \hline
+\cite{Facco2016}       & VM                   & Sim                   & \begin{tabular}[c]{@{}l@{}}nodo puramente alocado\\(nativo) \end{tabular}  & desempenho, custo e energia                                                         & OpenNebula           & cálculo de integrais                                                         \\ \hline
+\cite{7562612}                 & Docker               & Não                   & CentOS 7 64-bit 3.10.0          & Performance por instancias                                                          & OpenStack            & \begin{tabular}[c]{@{}l@{}} MPI com Graph500,\\ Linpack\end{tabular}                                                   \\ \hline
+\cite{Xavier2013}                 & \begin{tabular}[c]{@{}l@{}} LXC, OpenVZ,\\ VServer \end{tabular} & Não                   & Ubuntu 10.04 LTS                & \begin{tabular}[c]{@{}l@{}}diversos tipos de \\ recursos em único nodo\end{tabular} & 4 computadores fixos & \begin{tabular}[c]{@{}l@{}}Linpack, STREAM, \\ IOZone, NetPIPE\end{tabular} \\ \hline
+\cite{Zhang2016}                 & Docker               & Não                   & CentOS Linux                    & \begin{tabular}[c]{@{}l@{}}desempenho de operações\\ de comunicação\end{tabular}    & OpenStack            & \begin{tabular}[c]{@{}l@{}}MPI com Graph500,\\ NAS, LAMMPS\end{tabular}     \\ \hline
+\cite{Adufu2015}                 & Docker               & Não                   & Ubuntu 14.04 Trusty Tahr        & \begin{tabular}[c]{@{}l@{}}Desempenho de memória \\ RAM\end{tabular}                & OpenStack            & \textit{autodock3}                                                                    \\ \hline
+\end{tabular}}
+\end{table}
 
 Trabalho - tecnologia - operações - base de comparação - métricas - plataforma - tipo de teste 
 AutoElastic \cite{Facco2016} - VM - elasticidade por alocação - nodo puramente alocado (nativo) - desempenho, custo e energia - OpenNebula - cálculo de integrais.
