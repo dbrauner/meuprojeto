@@ -1,7 +1,12 @@
 %
 % Monografia de TCC1 de Douglas Brauner
 %
-\documentclass[twoside,english,brazilian]{UNISINOSmonografia}
+
+
+%%TODO
+%%% The time sync can not be done within the container, so the host must be sinkec before that.
+
+\documentclass[twoside,english,brazilian]{UNISINOSartigo}
 \usepackage[utf8]{inputenc} % charset do texto (utf8, latin1, etc.)
 \usepackage[T1]{fontenc} % encoding da fonte (afeta a sep. de sílabas)
 \usepackage{graphicx} % comandos para gráficos e inclusão de figuras
@@ -13,39 +18,30 @@
 %=======================================================================
 % Dados gerais sobre o trabalho.
 %=======================================================================
-\autor{Brauner}{Douglas}
-\titulo{Análise Comparativa entre Containers e Máquinas Virtuais para Execução de Aplicações de Alto Desempenho na Nuvem com Elasticidade}
+\title{Análise Comparativa entre Containers e Máquinas Virtuais para Execução de Aplicações de Alto Desempenho na Nuvem com Elasticidade}
+\author{Douglas Brauner}
+\authorinfo{Aluno do curso de Ciência da Computação. Email: dbrauner@edu.unisinos.br}
+\degree{Bacharel em Ciência da Computação}
+\course{Curso de Ciência da Computação}
 %\subtitulo{sub}
-\orientador[Prof.~Dr.]{Righi}{Rodrigo da Rosa}
-%\coorientador[Prof.~Dr.]{Lamport}{Leslie}
-\local{São Leopoldo}
-\ano{2016}
+\address{São Leopoldo}
+\date{2017}
+\advisor[Prof.Dr.]{Rodrigo da Rosa Righi}
 
-\unidade{Unidade Acadêmica Graduação}
-\curso{Curso de Bacharelado em Ciência da Computação}
-\natureza{%
-Trabalho de Conclusão de Curso apresentado como requisito parcial
-para a obtenção do título de Bacharel em Ciência da Computação
-pela Universidade do Vale do Rio dos Sinos --- UNISINOS
-}
+\advisorinfo{Orientador, professor da Unisinos, doutor em Ciência da Computação pela Universidade de Stanford (1995), Mestre em Ciência da Computação pela Universidade de Calcutá (1983). Email: professor@unisinos.br}
+
 
 % cada palavra-chave deve ser fornecida duas vezes, uma em português e
 % outra no idioma estrangeiro (na verdade, em tantos idiomas quantos se
 % desejar).
 % Se não fizer isto, não compila!
 % TODO: adicionar mais palavras-chave
-\palavrachave{brazilian}{Computação em Nuvem}
-\palavrachave{brazilian}{Elasticidade}
-\palavrachave{brazilian}{Aplicação de Alto Desempenho}
-\palavrachave{brazilian}{Containerização}
-\palavrachave{brazilian}{Docker}
-\palavrachave{brazilian}{AutoElastic}
-\palavrachave{english}{Cloud Computing}
-\palavrachave{english}{Elasticity}
-\palavrachave{english}{Containerization}
-\palavrachave{english}{Docker}
-\palavrachave{english}{AutoElastic}
-\palavrachave{english}{High Performance Computing}
+%\palavrachave{english}{Cloud Computing}
+%\palavrachave{english}{Elasticity}
+%\palavrachave{english}{Containerization}
+%\palavrachave{english}{Docker}
+%\palavrachave{english}{AutoElastic}
+%\palavrachave{english}{High Performance Computing}
 %palavrachave{}
 
 
@@ -53,9 +49,8 @@ pela Universidade do Vale do Rio dos Sinos --- UNISINOS
 % Início do documento.
 %=======================================================================
 \begin{document}
-\capa
-\folhaderosto
-%\folhadeaprovacao % não deve ser incluída nos TCCs
+
+\maketitle
 
 %=======================================================================
 % Dedicatória (opcional).
@@ -100,7 +95,7 @@ pela Universidade do Vale do Rio dos Sinos --- UNISINOS
 \begin{abstract}
 
 Uma das características mais importantes da computação em nuvem é a elasticidade de recursos, capacidade na qual o ambiente computacional pode aumentar ou diminuir os recursos demandados pelo usuário. Como recursos, podemos entender tudo aquilo que representa poder computacional, como CPU, memória, rede e largura de banda. Também se apresentam na forma de instâncias de máquinas virtuais e nós de computação. O interesse na capacidade de elasticidade de uma aplicação está relacionado aos benefícios que esta poderá proporcionar ao usuário, como uma melhoria de desempenho e melhor utilização dos recursos, permitindo uma economia de custos. Uma tecnologia de virtualização, chamada \textit{container}, ganhou força no mercado e até mesmo em pesquisas científicas por causa de sua mais nova implementação, o Docker. Esta tecnologia cria um ambiente dentro de um computador da família Unix que seja isolado, junto com runtime, sistema de arquivos e aplicações, permitindo um comportamento de interoperabilidade com qualquer outro computador. Ainda, é possível fazer uma replicação destes containers, de forma escalável, assim como máquinas virtuais, com a diferença que, em sua arquitetura, não é necessário o processo de inicialização (\textit{boot}) e o acesso aos recursos físicos, como CPU, rede e memória RAM, não é controlado por um \textit{hypervisor}, como no caso de VM. Isto torna a tecnologia de containers um candidato favorável para ambientes com elasticidade. O objetivo desta monografia é realizar uma análise comparativa entre containers e máquinas virtuais para execução de aplicações de alto desempenho em nuvem com elasticidade, com o intuito de fornecer esclarecimento de funcionamento para quem for implementar um modelo de elasticidade em nuvem, e poder escolher a melhor configuração, de acordo com seu cenário.
-
+\palavraschave{Computação em Nuvem.  Elasticidade.  Aplicação de Alto Desempenho. Containerização. Docker. Autoelastic}
 \end{abstract}
 
 %\begin{otherlanguage}{english}
@@ -157,12 +152,12 @@ Uma das características mais importantes da computação em nuvem é a elastici
 %=======================================================================
 % Sumário
 %=======================================================================
-\tableofcontents
+%\tableofcontents
 
 %=======================================================================
 % Introdução
 %=======================================================================
-\chapter{Introdução}
+\section{Introdução}
 
 Uma das características mais importantes da computação em nuvem é a elasticidade de recursos. Ou seja, a capacidade do ambiente computacional aumentar ou diminuir os recursos demandados pelo usuário. Como recursos, podemos entender tudo aquilo que representa poder computacional, como CPU, memória, rede e largura de banda. Também se apresentam na forma de instâncias de máquinas virtuais e nós de computação \cite{Bender2014}. O interesse na capacidade de elasticidade de uma aplicação está relacionado aos benefícios que esta poderá proporcionar ao usuário, como uma melhoria de desempenho e melhor utilização dos recursos, permitindo uma economia de custos. 
 
