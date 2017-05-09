@@ -467,7 +467,7 @@ et al. [44],''.
 	\end{minipage}
 \end{figure}
 
-O gerenciador analisa periodicamente as instâncias de containers que estão ativas, e verifica se é necessário um adição ou remoção de recursos, dependendo da configuração de \textit{threshold}. Neste modelo, o usuário pode definir o número minimo e máximo de containers por nó e quantos poderão operar na execução da aplicação. Ainda, a arquitetura garante que a aplicação em execução não tem o seu desempenho afetado pela adição ou remoção de recursos, pois o gerenciador atua de forma isolada do \textit{cluster} de computadores. 
+O gerenciador analisa periodicamente as instâncias de containers que estão ativas, e verifica se é necessário um adição ou remoção de recursos, dependendo da configuração de \textit{threshold}. No modelo proposto, o usuário pode definir o número minimo e máximo de containers por nó e quantos poderão operar na execução da aplicação. Ainda, a arquitetura garante que a aplicação em execução não tem o seu desempenho afetado pela adição ou remoção de recursos, pois o gerenciador atua de forma isolada do \textit{cluster} de computadores. 
 
 A base dados mostrada na figura \ref{fig:arquitetura} é utilizada para armazenar as imagens utilizadas pelo nó \textit{frontend}, além de permitir um espaço de comunicação entre o gerenciador e as instâncias de containers em execução, sendo este espaço acessável apenas pelos computadores do \textit{cluster}. A utilização de uma área compartilhada, para comunicação entre computadores virtualizados é uma prática comum, quando se falando de nuvens privadas. A área é acessada pelas instâncias através de pacotes SSH, um meio seguro de acesso ao sistema de arquivos remoto, que no caso fica fornecido pelo nó \textit{frontend}.
 
@@ -483,11 +483,12 @@ Escolhemos o Docker como plataforma de manipulação de containers, justamente p
 ONEDock é um conjunto de extensões para o OpenNebula para utilização de Docker containers como entidades de primeira classe, assim como se fossem Máquinas Virtuais (VM) leves. Para tal, Docker é configurado para atual como um \textit{hypervisor}, comportando-se então, como o KVM ou outro \textit{hypervisor} fazem no contexto de OpenNebula.
 \end{quote} 
 
-Sendo assim, o ONEDock será utilizado para estender o OpenNebula, a fim de suportar a utilização de containers em sua camada de virtualização.
+Este conjunto de ferramentas é open-source, o que possibilitou a codificação de características não suportadas pela distribuição atual da ferramenta, como veremos logo adiante na seção \section{avaliacao}.
 
 \subsection{Infraestrutura}
 
-Como infraestrutura de nuvem, utilizaremos o ambiente disponibilizado pela Universidade do Vale do Rio dos Sinos, localizado no laboratório C01 413 do Programa de Pós-Graduação em Computação Aplicada (PIPCA). O laboratório conta com 18 computadores, interconectados através de uma rede 100Mbps, sendo a configuração de cada um deles uma memória de 4 GB, além de processadores de dois núcleos de 2.9 GHz. A plataforma de nuvem OpenNebula será instalada nesta rede de computadores para a execução do protótipo, sendo que uma das máquinas será utilizada como nó \textit{Front-End}.
+Como infraestrutura de nuvem, utilizaremos o ambiente disponibilizado pela Universidade do Vale do Rio dos Sinos, localizado no laboratório C01 413 do Programa de Pós-Graduação em Computação Aplicada (PIPCA). O laboratório conta com 18 computadores, interconectados através de uma rede 100Mbps, sendo a configuração de cada um deles uma memória de 4 GB, além de processadores de dois núcleos de 2.9 GHz. Porém, para fins de teste de cenários específicos deste trabalho, 5 máquinas do laboratório foram configuradas para serem utilizadas. A plataforma de nuvem OpenNebula será instalada nesta rede de computadores para a execução do protótipo, sendo que uma das máquinas será utilizada como nó \textit{Front-End}. 
+A versão 1.1 do ONEDock tem suporte mínimo para a distribuição 4.14 do OpenNebula, portanto esta também teve que ser instalado. Além disto,a versão 1.9 do Docker foi escolhida por ser a versão no qual o ONEDock 1.1 foi testado. 
 
 
 \section{Metodologia de Avaliação}
@@ -495,9 +496,96 @@ Como infraestrutura de nuvem, utilizaremos o ambiente disponibilizado pela Unive
 
 Apesar da utilização de containers e máquinas virtuais serem estratégias de virtualização, estas não são idênticas em sua arquitetura. Portanto, o modelo de avaliação irá verificar os cenários de utilização onde um modelo pode ser melhor do que o outro. Tendo em vista isto, para a análise dos resultados, serão utilizadas métricas para avaliação de desempenho da aplicação, bem como a eficiência na utilização de recursos. Ainda, serão utilizadas métricas para verificar o consumo de recursos na aplicação executando de forma paralela, com diferentes números de containers e máquinas virtuais por nó computacional. 
 
-As técnicas de análise de \textit{Speedup} Elástico e Eficiência Elástica serão utilizadas para medir o desempenho de elasticidade de de nuvem em aplicações HPC \cite{Facco2016}. O \textit{Speedup} Elástico será utilizado para identificar a elasticidade do modelo em duas situações, uma com modelo configurado para um processo único executando a aplicação, e no outro será analisado o desempenho da execução em paralelo. A técnica de análise de Eficiência Elástica será utilizada, pois é pertinente identificar o qual eficiente é o modelo em questão de utilização dos recursos disponíveis, considerando sempre a elasticidade horizontal, ou seja, adicionando ou removendo recursos através de provisionamento de novas instâncias. 
+As técnicas de análise de \textit{Speedup} Elástico e Eficiência Elástica serão utilizadas para medir o desempenho de elasticidade de de nuvem em aplicações HPC \cite{Facco2016}. O \textit{Speedup} Elástico será utilizado para identificar a elasticidade do modelo em duas situações, uma com modelo configurado para um processo único executando a aplicação, e no outro será analisado o desempenho da execução em paralelo. A técnica de análise de Eficiência Elástica será utilizada, pois é pertinente identificar o quão eficiente é o modelo em questão de utilização dos recursos disponíveis, considerando sempre a elasticidade horizontal, ou seja, adicionando ou removendo recursos através de provisionamento de novas instâncias. 
 
-A partir da utilização de tais técnicas de avaliação, pode-se considerar vários cenários de implementação da nuvem, ou seja, as combinações serão exploradas independente de quantos núcleos de processamento estão disponível para cada nó computacional, isto com o objetivo de identificar as situações em que os modelos terão comportamentos discrepantes. Dessa forma, será feita também uma análise comparando o tempo de provisionamento dos recursos, levando em consideração todos os momentos envolvidos, que são: a busca da imagem no nó principal, o tempo de transferência desta imagem para o nó de execução, o tempo de criação da instância a partir da imagem e o tempo de inicialização da instância para rodar a aplicação. Estes passos são considerados tanto para máquinas virtuais quanto containers. Serão utilizadas, também, aplicações de \textit{benchmark}, propostas pela NASA \citetexto{NASA2016}, para avaliar o desempenho de aplicações paralelas. 
+A partir da utilização de tais técnicas de avaliação, pode-se considerar vários cenários de implementação da nuvem, ou seja, as combinações serão exploradas independente de quantos núcleos de processamento estão disponível para cada nó computacional, isto com o objetivo de identificar as situações em que os modelos terão comportamentos discrepantes. Dessa forma, será feita também uma análise comparando o tempo de provisionamento dos recursos, levando em consideração todos os momentos envolvidos, que são: a busca da imagem no nó principal, o tempo de transferência desta imagem para o nó de execução, o tempo de criação da instância a partir da imagem e o tempo de inicialização da instância para rodar a aplicação. Estes passos são considerados tanto para máquinas virtuais quanto containers. 
+
+\section{Cenários}
+\label{cenarios}
+
+Para a execução dos cenários de teste, estaremos utilizando a aplicação desenvolvida por \citetexto{Facco2016}, o programa consiste de um código para rodar cálculos de integrais em uma rede, seguindo o modo master-slave, sob diferentes tipos de carga, no nosso caso, utilizaremos a carga ascendente e descendente. O objetivo da aplicação é irrelevante, pois ela será utilizada apenas para fazer o benchmarking dos cenários de elasticidade. A aplicação realizará cálculos numéricos e distribuirá porções de trabalho para cada nó, interligados por MPI. A aplicação fica ciente de novos nós disponíveis a partir de um sistema de comunicação através de arquivos de texto, disponibilizados pela aplicação AutoElastic durante as operações de provisionamento de recursos.
+
+
+%The
+%prototype was used to run a numerical integration application
+%over a private cloud under different situations of load
+%(Ascending, Descending, Wave and Constant). The goal is
+%to show the AutoElastic actions considering the load
+%changes and the impact of both the loads and the asynchronism
+%on the applications performance.
+
+%The application used in the tests computes the numerical
+%integration of a function f(x) in a closed interval ½a; b. It was
+%implemented using the Composite Trapezoidal rule from a
+%Newton-Cotes postulation [46]. The Newton-Cotes formula
+%can be useful if the value of the integrand is given at equally
+%spaced points. Considering the partition of the interval ½a; b
+%into s equally spaced subintervals, each one with length h
+
+Considerando a infraestrutura já mencionada, cada nó foi exclusivamente dedicado para execução do benchmarking, sendo a aplicação do AutoElastic executava em um computador fora da Nuvem, utilizando a API do OpenNebula para controle dos recursos. O SLA foi configurado diferentemente para cada tipo de cenário, porém o número de hosts físicos foi fixado em 4, além de 1 host para o front-end. 
+
+\subsection{Execução com VMs}
+
+O DoCPB (Docker Containers Parallel Benchmarking) contará com uma execução do AutoElastic configurado para instanciar máquinas virtuais, que servirá como base de comparação, sendo que este é considerado o estado da arte do modelo. Para tal, dois templates de imagens foram configurados com o sistema operacional Ubuntu 10.10, sendo o master provido com 1 unidade de CPU e 1GB de RAM, além do template slave com 1 unidade de CPU e 2GB de RAM, desta forma, cada vez que for solicitado por um recurso adicional de computação, uma unidade slave é carregada para um dos nós de computação, ocupando 1 dos cores de CPU e metade da memória RAM disponível.
+
+\subsection{Execução com Containers}
+
+A execução da aplicação paralela com configuração de 2 VMs por hosts (1 para cada core) é considerada a mais otimizada, segundo \citetexto{Facco2016}. Porém, não sabemos se a mesma regra se aplica ao cenário de containers, por serem processos mais leves que uma máquina virtual, é possível que um número maior de containers por nó tenha um desempenho melhor. Tendo em vista isto, criamos os cenários de acordo com a tabela \ref{tab:table3}.
+
+\begin{table}[]
+\centering
+\caption{Cenários de Containers}
+\label{tab:table3}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Cenário} & \textbf{Slaves Inicial} & \textbf{CPU alocada} & \textbf{RAM alocada (GB)} & \textbf{Containers por operação} \\ \hline
+1                & 1                       & 2                    & 4096                      & 1                                \\ \hline
+2                & 2                       & 1                    & 2048                      & 2                                \\ \hline
+3                & 2                       & 0.5                  & 1024                      & 4                                \\ \hline
+4                & 2                       & 0.25                 & 512                       & 8                                \\ \hline
+\end{tabular}
+\end{table}
+
+No cenário 1 da tabela, alocamos toda a capacidade de processamento (CPU) e de memória disponível do host, sendo que cada operação de alocação de recursos irá adicionar 1 container em um outro host, ocupando toda a capacidade deste para execução deste container também. No cenário 2, temos uma configuração considerada equivalente ao definido para o cenário de máquinas virtuais, ou seja, 2 containers por operação, sendo cada um com 1 core da CPU e 2GB de memória RAM. Temos outros dois cenários estabelecidos para avaliação, o cenário 3 com configuração para ocupar cada nó de processamento com 4 containers e o cenário 4 com configuração para 8 containers por nó, sendo estes também configurados para ocupar toda a capacidade do nó.
+
+
+
+
+
+There are some technical decisions that are imposed in
+the implementation of the AutoElastic prototype: (i) utilization
+of network file system to implement the AutoElastic
+module responsible for providing a private area for data
+sharing inside the cloud; (ii) AutoElastic employs periodic
+monitoring, which is associated with a period of 30 s (Open-
+Nebula lower bound index); and (iii) Contemplating related
+work, 80 and 40 percent were used for maximum and minimum
+thresholds. Looking at decision (i), the manager uses
+the binary SCP from the SSH package to obtain or place files
+from/to the cloud front-end. These files are in a shared
+folder that is enabled with NFS and represents elasticity
+actions and process data. We follow this implementation
+because the AutoElastic Manager cannot access the NFS
+directly, unless it is placed inside the cloud.
+
+\section{Métricas}
+\label{metricas}
+
+De acordo com <cite alguem>, para mantermos o 
+calcular número de CPUs utilizadas??
+
+
+Therefore, considering the values of the cost in
+Table 4, the objective is to preserve the truth of
+Inequality (7):
+Fig. 6. (a) Template of the input file for the tests; (b), (c), (d) and (e) are Cost ¼ App Time  Resource
+
+\section{Avaliação}
+\label{avaliacao}
+
+Esta seção apresenta detalhes sobre o benchmarking DoCPB executado e também irá cobrir os resultados, conforme comentado na seção `introdução'. 
+
+
 
 
 %=======================================================================
@@ -506,7 +594,11 @@ A partir da utilização de tais técnicas de avaliação, pode-se considerar v�
 \chapter{Conclusão}
 \label{conclusion}
 
-A partir da revisão bibliográfica que foi apresentada no capítulo \ref{fundamentacao}, foi possível estabelecer as bases necessárias para que pudesse ser visto as oportunidades de melhoria de tecnologias de virtualização ambientes com elasticidade. A partir disto, no capítulo \ref{related}, estudamos os trabalhos relacionados que abordam, tanto os conceitos de virtualização baseada em containers em comparação à virtualização baseada em \textit{hypervisor}, quanto os modelos de elasticidade para aplicações HPC. Através disto, traçamos um paralelo entre estas pesquisas e identificamos as lacunas existentes nestes campos de pesquisa. A análise dos trabalhos permitiu identificar uma melhoria no modelo de elasticidade atual baseado em virtualização por \textit{hypervisor}, além de despertar questões a repeito de que em quais momentos uma tecnologia pode ser mais indicada que a outra. Assim, poderemos utilizar das métricas de avaliação propostas na seção \ref{avaliacao} para identificar os \textit{overheads} de cada tecnologia. Neste capítulo final, pretendemos mostras as contribuições esperadas deste trabalho (sessão \ref{contribuicoes}), além de descorrer sobre as oportunidades de trabalhos futuros, na seção \ref{futuros}. Finalmente, na seção \ref{cronograma}, mostraremos o planejamento para os próximos passos de implementação do projeto proposto, através de um cronograma.
+Descrever aqui o que foi apresentado ``Neste trabalho foi apresentado''. O que houve de contribuição científica.
+Diferencial em relação aos trabalhos apresentados. Porque é bom para o mundo.
+Possível uso em outras áreas.
+
+- Dados numéricos, números, percentual mais significativo.
 
 \section{Contribuições Esperadas}
 \label{contribuicoes}
@@ -518,33 +610,7 @@ Esperamos também que o modelo e resultados da pesquisa possam servir com um gui
 \section{Trabalhos Futuros}
 \label{futuros}
 
-As próximas etapas do trabalho irão compor a implementação do modelo proposto e das análises comparativas, a partir da utilização de técnicas de \textit{benchmark}. Pretende-se, então estudar o desempenho de aplicações HPC, sob diferentes configurações, no modelo de elasticidade com virtualização baseada em containers e em \textit{hypervisor}, identificando sob quais circunstâncias uma tecnologia pode ser mais interessante do que outra, dependendo da finalidade da implementação.
-
-Na sessão \ref{cronograma}, podemos verificar quais serão as etapas de continuação deste trabalho para conseguir alcançar os objetivos propostos. Como trabalhos futuros, também pretende-se identificar os overheads de desempenho de memória, CPU, operações de I/O e rede de cada tecnologia.
-
-\section{Cronograma}
-\label{cronograma}
-Abaixo encontramos uma tabela com a relação de atividades previstas para o desenvolvimento deste trabalho, com um planejamento das suas respectivas datas de execução.
-
-\begin{tabular}{|l|c|c|c|c|c|c|}\hline
- & \multicolumn{6}{c|}{\textbf{Meses}}\\ \cline{2-7}
-\raisebox{1.5ex}{\textbf{Etapa}} & 01 & 02 & 03 & 04 & 05 & 06 										\\ \hline
-
-Estudo e escolha da plataforma de cloud computing 						& X &   &   &   &   &		  	\\ \hline
-Estudo e preparação do ambiente de execução de testes            		& X &   &   &   &   & 			\\ \hline
-Estudo e e escolha de testes de benchmark e profiling            		& X &   &   &   &   & 			\\ \hline
-Modelagem da solução			 										& X & X &   &   &   &			\\ \hline
-Definir estratégia para comparação de resultados						&   & X &   &   &   & 			\\ \hline
-Desenvolvimento da extensão do modelo aplicando containers   			& 	& X &	&   &   &			\\ \hline
-Testes e avaliação do modelo sob diferentes cenários					& 	& X & 	& 	& 	&  		   \\ \hline
-Escrita do artigo														& X	& X & X & X & X & X			\\ \hline
-Preparação da apresentação												& 	&   &   &   & X & X			\\ \hline
-Baterias de testes para validação 										& 	& 	& 	& 	& 	& X 	   \\ \hline
-Avaliação e tratamento dos resultados									& 	& 	& 	& 	& 	& X 	   \\ \hline
-
-\end{tabular} 
-
-\label{t_cronograma}
+Explicar aqui o que pode ter de furo na implementação, o que não deu tempo de fazer etc.
 
 %=======================================================================
 % Referências
