@@ -12,6 +12,7 @@
 \usepackage{graphicx} % comandos para gráficos e inclusão de figuras
 \usepackage{bibentry} % para inserir refs. bib. no meio do texto
 \usepackage{tabularx}
+\usepackage[font=scriptsize]{subfig}
 %=======================================================================
 \unisinosbst
 
@@ -50,6 +51,9 @@
 %=======================================================================
 \begin{document}
 
+%\captionsetup[sub]{font=small,labelfont={bf,sf}}
+%\captionsetup{font={footnotesize,sf,sansmath}}
+%\captionsetup[subfloat]{font={footnotesize,sf,sansmath}}
 \maketitle
 
 %=======================================================================
@@ -485,6 +489,32 @@ ONEDock é um conjunto de extensões para o OpenNebula para utilização de Dock
 
 Este conjunto de ferramentas é open-source, o que possibilitou a codificação de características não suportadas pela distribuição atual da ferramenta, como veremos logo adiante na seção \section{avaliacao}.
 
+\subsection{Acesso à rede}
+O OpenNebula permite que seja definida uma interface de rede no momento de deploy de uma máquina virtual, porém o Docker possui uma configuração própria de interface de rede para o computador no qual está sendo executado, que é visível para todos os containers em execução na mesma máquina, porém não acessível de fora deste computador. Cada computador possui um processo Docker que gerencia os containers, a entrega de uma imagem do frontend para os nós é feita através de entrega da imagem no diretório compartilhado e execução remota de comandos Docker, como mostrado na figura \ref{fig:provision-use-case}.
+
+\begin{figure}
+	\caption{Formato de provisionamento de container Docker}
+	\label{fig:provision-use-case}
+	\centering%
+	\begin{minipage}{0.8\textwidth}
+		\includegraphics[scale=0.6]{provision-use-case}
+		\fonte{\cite{whitepaperDocker2016}}
+	\end{minipage}
+\end{figure}
+
+
+Os containers lançados possuem acesso somente à esta rede isolada. Portanto, para que todos os containers gerenciados pelo OpenNebula possam se comunicar, a tecnologia permite que determinadas portas do container sejam redirecionadas para portas do host, a figura \ref{fig:network_access} mostra como esta comunicação é feita. Esta abordagem foi aplicada aos containers para permitir a troca de mensagens entre os containers distribuídos em diferentes máquinas da Nuvem.
+\begin{figure}
+	\caption{Redirecionamento de portas para containers}
+	\label{fig:network_access}
+	\centering%
+	\begin{minipage}{0.8\textwidth}
+		\includegraphics[width=\textwidth]{network_access}
+		\fonte{\cite{whitepaperDocker2016}}
+	\end{minipage}
+\end{figure}
+
+
 \subsection{Infraestrutura}
 
 Como infraestrutura de nuvem, utilizaremos o ambiente disponibilizado pela Universidade do Vale do Rio dos Sinos, localizado no laboratório C01 413 do Programa de Pós-Graduação em Computação Aplicada (PIPCA). O laboratório conta com 18 computadores, interconectados através de uma rede 100Mbps, sendo a configuração de cada um deles uma memória de 4 GB, além de processadores de dois núcleos de 2.9 GHz. Porém, para fins de teste de cenários específicos deste trabalho, 5 máquinas do laboratório foram configuradas para serem utilizadas. A plataforma de nuvem OpenNebula será instalada nesta rede de computadores para a execução do protótipo, sendo que uma das máquinas será utilizada como nó \textit{Front-End}. 
@@ -578,7 +608,7 @@ calcular número de CPUs utilizadas??
 Therefore, considering the values of the cost in
 Table 4, the objective is to preserve the truth of
 Inequality (7):
-Fig. 6. (a) Template of the input file for the tests; (b), (c), (d) and (e) are Cost ¼ App Time  Resource
+Fig. 6. (a) Template of the input file for the tests; (b), (c), (d) and (e) are Cost App Time Resource
 
 \section{Avaliação}
 \label{avaliacao}
@@ -586,6 +616,33 @@ Fig. 6. (a) Template of the input file for the tests; (b), (c), (d) and (e) are 
 Esta seção apresenta detalhes sobre o benchmarking DoCPB executado e também irá cobrir os resultados, conforme comentado na seção `introdução'. 
 
 
+
+\begin{figure}%
+\centering
+%\subfigure[Figure6]{\centerline{\includegraphics[width=15cm]{pdfresizer.pdf}}}\\
+%\subfig[Figure7]{\includegraphics[width=15cm, height=3cm]{pdfresizercontainer2.pdf}}\\
+\subfloat[caption]{\includegraphics[width= 15cm]{charts/vmelastic.pdf}}\\
+\vspace{-0.5\baselineskip}
+\subfloat[caption]{\includegraphics[width= 15cm]{container21.pdf}}\\
+\vspace{-0.5\baselineskip}
+\subfloat[caption]{\includegraphics[width= 15cm]{container21.pdf}}\\
+\vspace{-0.5\baselineskip}
+\subfloat[caption]{\includegraphics[width= 15cm]{container21.pdf}}\\
+\vspace{-0.5\baselineskip}
+\subfloat[caption]{\includegraphics[width= 15cm]{container21.pdf}}\\
+\vspace{-0.5\baselineskip}
+\subfloat[caption]{\includegraphics[width= 15cm]{container21.pdf}}\\
+\vspace{-0.5\baselineskip}
+\subfloat[caption]{\includegraphics[width= 15cm]{container21.pdf}}\\
+%\subfig[Figure7]{\includegraphics[width=15cm]{pdfresizercontainer2.pdf}}\\
+%\subfig[Figure7]{\includegraphics[width=15cm]{pdfresizercontainer2.pdf}}\\
+%\subfig[Figure7]{\includegraphics[width=15cm]{pdfresizercontainer2.pdf}}\\
+%\subfig[Figure7]{\includegraphics[width=15cm]{pdfresizercontainer2.pdf}}\\
+%\subfig[Figure7]{\includegraphics[width=15cm]{pdfresizercontainer2.pdf}}\\
+%\subfig[Figure7]{\includegraphics[width=15cm]{pdfresizercontainer2.pdf}}\\
+\caption{Three subfigures.}
+\label{3figs}
+\end{figure}
 
 
 %=======================================================================
