@@ -1,0 +1,97 @@
+Título:
+
+Avaliando as Estratégias de Conteiner e Máquina Virtual na Execução de Aplicações em Nuvem com Elasticidade
+
+OU
+
+XXX: Um Benchmark para Avaliar as Estratégias de Conteiner e Máquina Virtual na Execução de Aplicações em Nuvem com Elasticidade
+
+—
+
+Resumo:
+
+tema e sub-tema. problema, teu trabalho, contribuicao!!! protótipo, resultados.
+
+—
+
+Introducao - 1 pagina e meia, texto corrido.
+
+Tema, sub-tema
+estado-daarte
+problema
+teu trabalho,  contrito., prototipo. e testes.
+organização do artigo.
+
+ —
+
+Fundamentação teórica
+
+3 ou 4 paginas.
+
+—
+
+Trabalhos Relacionados - 2, 3 paginas.
+
+selectors dos trabalhos
+
+n pararrayos para explica-los.
+
+uma tabela comparativa
+
+1 parágrafo com a lacuna e explicar a lacuna.
+
+MAIS TR - uns 7 ou 8 no total.
+
+—
+
+COLOQUE referencias de 2017!!!!
+
+——
+
+4. Benchmark xxx
+
+texto sobre o bvench, geral.
+
+4.1 Decisões de Projeto
+
+4.2 Arquitetura
+
+4.3 Modelo de Aplicação Paralela.
+
+4.4. yyyyyy Condução da Avaliação? - estratégia. 1 VM com 1 docker - delta tempo, lançamento tempo, largura de banda,
+
+—> FLUXOGRAMA.
+
+RIGIDO e MALEAVEL.
+—
+
+5. Metodologia de Avaliacao
+
+5.1 Desenvolvimento de Protótipo
+
+5.2 Cenários de Avaliação, Infraestrutura e Aplicação Paralela
+
+5.3 Métricas e Parâmetros
+
+—
+AVALIACAO
+
+—
+
+Conclusao
+
+3 paragrafos
+
+1 - o que voce fez, contribuição, “Diferente de trabalhos relacionados, xxx apresenta …”.
+contribuição - adição na literatura.
+
+2 - dados numéricos
+percentagens
+
+3 trabalhos futuros.
+tudo que tem furo, vai aqui.
+aplicação real—
+—
+
++ 1 e meia pagina de referencia.
+——

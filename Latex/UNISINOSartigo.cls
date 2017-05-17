@@ -43,7 +43,7 @@
 \ProcessOptions\relax
 \LoadClass[a4paper,12pt]{article}
 \RequirePackage{babel}
-\RequirePackage{helvet}
+\RequirePackage{times}%helvet
 \RequirePackage{indentfirst}
 \RequirePackage{setspace}
 \RequirePackage[hang]{footmisc}
