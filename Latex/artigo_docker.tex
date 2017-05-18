@@ -129,6 +129,7 @@ O estado-da-arte atual mostra que uma das abordagens mais comuns de elasticidade
 
 Algumas implementações recentes de virtualização baseada em contêineres, como Linux-Vserver, OpenVZ e Linux contêineres (LXC) oferecem uma camada leve de virtualização, com a promessa de desempenho muito próximo ao nativo, devido à sua arquitetura e virtualização no nível de sistema operacional (SO) \cite{Bernstein2014}. Sendo assim, O Docker contêineres Benchmark (DoCB) é uma avaliação de a contêineres e máquinas virtuais, utilizando estratégias de cada alternativa, para a execução de aplicações paralelas e distribuídas em uma nuvem. A ferramenta AutoElastic é utilizada para fazer o gerenciamento das execuções com contêineres e máquinas virtuais na nuvem, os dados gerados pelo AutoElastic são utilizados para compor e comparar os resultados de ambas tecnologias. 
 
+Este trabalho foi organizado em 8 seções. Nesta seção falamos do tema do trabalho e introduzimos o assunto abordado. Na sequência, iremos apresentar uma revisão dos conceitos por trás das tecnologias utilizadas e revisaremos o estado-da-arte. Na seção \ref{related} é feito um estudo de trabalhos relacionados ao tema deste artigo. Na seção \ref{model} será apresentado o benchmark criado, com detalhes da metodologia empregada na execução. Teremos então, na seção \ref{avaliacao} uma análise dos resultados obtidos utilizando os critérios definidos. Finalmente, a seção \ref{conclusion} é destinada às considerações finais do trabalho, bem como oportunidades de trabalhos futuros.
 
 \section{Fundamentação Teórica}
 \label{fundamentacao}
@@ -174,22 +175,13 @@ Este capítulo irá abordar as principais definições relacionadas ao conceito 
 
 \subsection{Computação em Nuvem}
 \label{cloud}
-Segundo a definição do National Institute of Standards and Technologies (NIST) \cite{Mell2012}, a computação em nuvem é um modelo que permite o acesso de recursos computacionais configuráveis e compartilhados, de forma conveniente, ubíqua e sob demanda, capazes de ser provisionados e entregues com baixo custo de gerenciamento e sem a intervenção de um provedor de serviços. Tais recursos podem ser: redes, servidores, serviços, armazenamento, aplicações, etc. Tais recursos são tipicamente fornecidos no modelo \textit{pay-as-you-go}, ou seja, você paga de acordo com a demanda de recursos solicitada \cite{Suleiman2012}. Sendo assim, a computação em nuvem se utiliza de mecanismos para escalar estes recursos conforme necessidade, através de algoritmos que irão trabalhar no balanceamento de carga rapidamente para diminuir o desperdício de recursos computacionais. Podemos resumir a computação em nuvem para cinco características essenciais, além de três modelos de serviço e quatro modelos de implantação \cite{Verdi2010}.
-\begin{itemize} 
-	\item Características essenciais: são a clara distinção com outros paradigma, as características básicas para identificar uma solução de computação em nuvem são a elasticidade rápida dos recursos, medição de serviço, serviço sob demanda, pool de recursos e o amplo acesso \cite{Moreira2010}.
-	\item Modelos de serviço: Estes definem um padrão de arquitetura, bem como uma estruturação hierárquica, as mais diversas soluções de computação em nuvem podem ser identificadas como camadas nesses modelos. A Figura~\ref{fig:saas_paas} ilustra os modelos de serviços.
-	\begin{figure}
-		\caption{Modelos de serviço}
-		\label{fig:saas_paas}
-		\centering%
-		\begin{minipage}{.4\textwidth}
-			\includegraphics[width=\textwidth]{saas_paas}
-			\fonte{\citetexto{Moreira2010}}
-		\end{minipage}
-	\end{figure}
-	\item Modelos de implantação: Estes definem como se dará o acesso e disponibilidade da computação em nuvem para o usuário. A diferença entre os modelos se dão de acordo com o tipo de informação e processo de negócio, de acordo com necessidade. Em alguns casos, por exemplo, não é aceitável para uma empresa ou governo que o \textit{data center} esteja localizado em um outro país. De acordo com \citetexto{Mell2012} os modelos são: Nuvem privada (private cloud), Nuvem comunidade (community cloud), Nuvem pública (public cloud), Nuvem hibrida (hybrid cloud).
- 
-\end{itemize}
+Segundo a definição do National Institute of Standards and Technologies (NIST) \cite{Mell2012}, a computação em nuvem é um modelo que permite o acesso de recursos computacionais configuráveis e compartilhados, de forma conveniente, ubíqua e sob demanda, capazes de ser provisionados e entregues com baixo custo de gerenciamento e sem a intervenção de um provedor de serviços. Tais recursos podem ser: redes, servidores, serviços, armazenamento, aplicações, etc. Tais recursos são tipicamente fornecidos no modelo \textit{pay-as-you-go}, ou seja, você paga de acordo com a demanda de recursos solicitada \cite{Suleiman2012}. Sendo assim, a computação em nuvem se utiliza de mecanismos para escalar estes recursos conforme necessidade, através de algoritmos que irão trabalhar no balanceamento de carga rapidamente para diminuir o desperdício de recursos computacionais.
+
+Na computação em nuvem, existem cinco características essenciais que ajudam a defini-la, que são a clara distinção com outros paradigma, a elasticidade rápida dos recursos, medição de serviço, serviço sob demanda, pool de recursos e o amplo acesso ao meio\cite{Moreira2010}. Em relação à elasticidade, \citetexto{Taurion2012} define que elasticidade é a capacidade do ambiente computacional da nuvem aumentar ou diminuir de forma automática os recursos computacionais demandados e provisionados para cada usuário. Diferente da escalabilidade que se diz respeito à quantidade de usuários que ela pode manter conectados ao mesmo tempo, sendo o limite de escalabilidade o ponto em que esta não pode suportar mais usuários conectados sem apresentar a mesma  eficiência \cite{Wilder12}. 
+
+A elasticidade é a escalabilidade em duas direções: tanto cresce quanto diminui a capacidade ofertada. Os dois termos podem ser confundidos, já que dizem respeito à adaptação de recursos conforme demanda, porém a escalabilidade é relativa à capacidade manter o desempenho conforme a demanda, já a elasticidade é a capacidade de fazer os recursos se adaptem à carga, seja para aumentar ou diminuir. 
+Iremos adotar a definição de \citetexto{coutinho2013elasticidade} que diz que a elasticidade é a \textit{``Capacidade de adicionar e remover recursos de forma automática de acordo com a carga de trabalho sem interrupções e utilizando os recursos de forma otimizada``.}
+
 
 \begin{comment}
 \section{Elasticidade vs Escalabilidade}
@@ -210,23 +202,26 @@ Alguns dos conceitos chave para compreender a tecnologia são descritos abaixo \
 	\item Contêiner: A palavra contêiner \textit{container} se refere a uma técnica de isolamento de recursos dentro de um sistema operacional baseado em UNIX, utilizando uma série de ferramentas que trabalham nativamente, mas sem a sobrecarga de rodar um \textit{kernel} separado e sem fazer simulação de hardware, através de utilização de \textit{namespaces}, e \textit{control groups} \cite{LXC2016}.
 	\item Cgroups: Cgroups é uma configuração que faz parte do subsistema de \textit{kernel} de sistemas baseado em UNIX, que fornece controle sobre recursos do sistema, como CPU, memória, rede, etc  \cite{NICKOLOFF2016}.
 	\item Chroot: (\textit{change root}) é um comando Linux para mudar o diretório raiz do processo corrente e seus processos aninhados para um novo diretório. Alguns contêineres utilizam este comando para isolar e compartilhar o sistema de arquivos entre os ambientes contêinerizados \cite{Dua2014}. 
+\end{itemize}
 
 \subsection{Virtualização vs Contêinerização}
 \label{virtualization}
-
 Uma camada de virtualização pode ajudar a isolar um ambiente compartilhado de computadores. Em \textit{clusters} de HPC, normalmente os recursos são compartilhados entre mais usuários e isto faz com que possa ocorrer problemas nesse compartilhamento \cite{Xavier2013}. É possível utilizar uma nuvem sem virtualização, o que trará vantagens em relação ao desempenho e evita o \textit{overhead} nos recursos, porém isto também significa falta de flexibilidade, e dificuldade de utilização, pois os recursos não são compartilhados entres o nodos \cite{Kominos2017}.
-Um \textit{hypervisor}, ou gerenciador de máquinas virtuais, é um programa que roda no sistema operacional host, fornecendo os recursos de hardware deste para uma série de máquinas virtuais, neste caso, estas máquinas virtuais compartilham o mesmo hardware. Como mostrado na figura~\ref{fig:vmvsdocker}, o hypervisor é responsável por fornecer o acesso aos recursos para cada sistema operacional dentro das máquinas virtuais, mas com o custo deste gerenciamento como processamento \cite{Zhang2016}. O termo \textit{contêinerização} é a forma popular para se referenciar à virtualização baseada em contêiner, que permite o isolamento de determinados softwares, que são executados dentro do mesmo kernel no sistema operacional Linux, mas que diferentemente do hypervisor, não adiciona uma camada virtualização, na qual precisaria carregar um sistema operacional convidado \cite{Zhang2016}.
-Na Tabela~\ref{tab:table1} podemos verificar as diferenças entre as duas tecnologias.
+
+Um \textit{hypervisor}, ou gerenciador de máquinas virtuais, é um programa que roda no sistema operacional host, fornecendo os recursos de hardware deste para uma série de máquinas virtuais, neste caso, estas máquinas virtuais compartilham o mesmo hardware. Como mostrado na figura~\ref{fig:vmvsdocker}, o hypervisor é responsável por fornecer o acesso aos recursos para cada sistema operacional dentro das máquinas virtuais, mas com o custo deste gerenciamento como processamento \cite{Zhang2016}. 
 
 \begin{figure}
 	\caption{Docker vs Virtual Machine}
 	\label{fig:vmvsdocker}
 	\centering%
 	\begin{minipage}{.4\textwidth}
-		\includegraphics[width=\textwidth]{vmvsdocker}
-		\fonte{\citetexto{Cham12}}
+		\includegraphics[width=\textwidth]{images/VMxDocker}
+		\fonte{Elaborado pelo autor}
 	\end{minipage}
 \end{figure}
+
+O termo \textit{contêinerização} é a forma popular para se referenciar à virtualização baseada em contêiner, que permite o isolamento de determinados softwares, que são executados dentro do mesmo kernel no sistema operacional Linux, mas que diferentemente do hypervisor, não adiciona uma camada virtualização, na qual precisaria carregar um sistema operacional convidado \cite{Zhang2016}.
+Na Tabela~\ref{tab:table1} podemos verificar as diferenças entre as duas tecnologias. Nesta tabela, é importante ressaltar as diferenças de desempenho e tempo de início, os contêineres possuem a vantagem de poder utilizar diretamente os recursos do hospedeiro e não necessitar de tempo de \textit{boot}.
 
 \begin{table}[!ht]
 	\caption{Características de VM e contêineres}
@@ -235,15 +230,15 @@ Na Tabela~\ref{tab:table1} podemos verificar as diferenças entre as duas tecnol
 	\resizebox{\textwidth}{!}{%
 		\begin{tabular}{|l|l|l|}
 			\hline
-			\textbf{Parametro} &\textbf{Máquinas Virtuais}\ &\textbf{contêineres}\\
+			\textbf{Parâmetro} &\textbf{Máquinas Virtuais}\ &\textbf{Contêineres}\\
 			\hline
-			SO Convidado & \begin{tabular}[c]{@{}l@{}}Um hardware virtual é disponibilizado para cada VM, \\ com um espaço de memória reservado.\end{tabular} & \begin{tabular}[c]{@{}l@{}}Todos os convidados compartilham o mesmo SO,\\cada imagem é carregada para o espaço de memória \\do Kernel \end{tabular}\\ \hline
-			Comunicação & Feita por dispositivos Ethernet & Utilização de mecanismos IPC como sinais, sockets, pipes\\ \hline
-			Segurança & Depende da implementação do fornecedor de Hypervisor & Utilização de mecanismos de controle de acesso\\ \hline
-			Desempenho & \begin{tabular}[c]{@{}l@{}}Irá receber uma sobrecarga pelo trabalho de tradução\\de instruções do sistema hospedeiro para o convidado\end{tabular}  &\begin{tabular}[c]{@{}l@{}}contêineres fornecem um desempenho muito próximo ao \\nativo em comparação ao executado direto no hospedeiro\end{tabular} \\ \hline
-			Isolamento &\begin{tabular}[c]{@{}l@{}} Não é possível compartilhar arquivos, bibliotecas e \\execução de programas entre as máquinas virtuais  \end{tabular} & \begin{tabular}[c]{@{}l@{}}Subdiretórios podem ser montados e compartilhados \\ entre contêineres no mesmo hospedeiro \end{tabular} \\ \hline
-			Tempo de início & \begin{tabular}[c]{@{}l@{}} Demora o tempo de processo de boot de um \\ sistema operacional \end{tabular} & contêineres não fazem boot de sistema\\ \hline
-			Armazenamento & \begin{tabular}[c]{@{}l@{}}Software específicos de armazenamento e sistema \\de arquivos precisam ser instalados no convidado \\além de estarem no hospedeiro\end{tabular} & \begin{tabular}[c]{@{}l@{}} O armazenamento em contêineres pode ser \\ compartilhado com o hospedeiro \end{tabular} \\ 
+			SO Convidado & \begin{tabular}[c]{@{}l@{}}Um hardware virtual é criado para cada\\VM, com um espaço de memória reservado\end{tabular} & \begin{tabular}[c]{@{}l@{}}Todos os convidados compartilham o\\mesmo SO, cada imagem é carregada\\para o espaço de memória do Kernel \end{tabular}\\ \hline
+			Comunicação & Feita por dispositivos Ethernet & \begin{tabular}[c]{@{}l@{}} Utilização de mecanismos IPC como sinais,\\sockets, pipes \end{tabular}\\  \hline
+			Segurança &\begin{tabular}[c]{@{}l@{}} Depende da implementação do fornecedor\\de hipervisor\end{tabular}& Utilizam mecanismos de controle de acesso\\ \hline
+			Desempenho & \begin{tabular}[c]{@{}l@{}}Irá receber uma sobrecarga pelo trabalho\\de tradução de instruções do sistema\\hospedeiro para o convidado\end{tabular}  &\begin{tabular}[c]{@{}l@{}}contêineres fornecem um desempenho\\muito próximo ao nativo em comparação\\ao executado direto no hospedeiro\end{tabular} \\ \hline
+			Isolamento &\begin{tabular}[c]{@{}l@{}} Não é possível compartilhar arquivos,\\bibliotecas e execução de programas entre\\as máquinas virtuais  \end{tabular} & \begin{tabular}[c]{@{}l@{}}Subdiretórios podem ser montados e\\compartilhados entre contêineres no mesmo\\hospedeiro \end{tabular} \\ \hline
+			Tempo de início & \begin{tabular}[c]{@{}l@{}} Demora o tempo de processo de boot de um \\ sistema operacional \end{tabular} & contêineres não fazem boot de sistema\\ \hline 
+			Armazenamento& \begin{tabular}[c]{@{}l@{}}Sistema de arquivos precisa ser\\instalados no convidado além do hospedeiro\end{tabular} & \begin{tabular}[c]{@{}l@{}} O armazenamento em contêineres pode\\ser compartilhado com o hospedeiro \end{tabular} \\ 
 			\hline
 		\end{tabular}}
 		\fonte{\cite{Dua2014}}
@@ -251,53 +246,31 @@ Na Tabela~\ref{tab:table1} podemos verificar as diferenças entre as duas tecnol
 
 \section{Trabalhos Relacionados}
 \label{related}
-Nesta seção iremos ver um estudo de trabalhos que trazem soluções de elasticidade para aplicações de alto desempenho, bem como estudos comparativos entre a utilização de máquinas virtuais e contêineres. Este estudo tem por objetivo confrontar os trabalhos e identificar as lacunas e possíveis melhorias em ambientes elásticos. A seleção de trabalhos relacionados, bem como outras referências, foi realizada através de uma pesquisa em diversas bases de dados de artigos científicos de Ciências Exatas, como o portal da \textit{IEEE Xplore}, \textit{ACM Digital Library} e \textit{Springer Link}, além da bases de dados nacionais, o Portal de Periódicos CAPES/MEC.
+Nesta seção iremos ver um estudo de trabalhos que trazem soluções de elasticidade para aplicações de alto desempenho, bem como estudos comparativos entre a utilização de máquinas virtuais e contêineres, considerados o estado-da-arte na atualidade. Este estudo tem por objetivo confrontar os trabalhos e identificar as lacunas e possíveis melhorias em ambientes elásticos. A seleção de trabalhos relacionados, bem como outras referências, foi realizada através de uma pesquisa em diversas bases de dados de artigos científicos de Ciências Exatas, como o portal da \textit{IEEE Xplore}, \textit{ACM Digital Library} e \textit{Springer Link}, além da bases de dados nacionais, o Portal de Periódicos CAPES/MEC.
+
 Para a realização das pesquisas nessas bases de dados, foram utilizadas buscas com estas principais palavras-chave: \textit{docker virtual machine, container high performance computing, scalablity elasticity, hpc application container, virtualization contêineres, cloud computing elasticity}. O resultado dessas pesquisas foi analisado com o intuito de encontrar trabalhos que explorassem a utilização de contêineres em ambientes de computação em nuvem, bem como as alternativas e implementações de elasticidade em aplicações HPC. 
 
-\subsection{AutoElastic}
+\subsection{Análise do Estado-da-Arte}
 \label{autoelastic}
+O AutoElastic, segundo a definição de \citetexto{7090978}, age como um \textit{middleware} permitindo que aplicações HPC iterativas obtenham vantagem do provisionamento dinâmico de recursos de uma infraestrutura de nuvem sem a necessidade de modificações no código fonte. O AutoElastic possui um protótipo executado pelo autor na plataforma de nuvem OpenNebula e obteve resultados de ganho de desempenho de até 59\% na execução de uma aplicação de integração numérica \textit{CPU-Bound}, quando comparada com outras soluções de elasticidade. 
 
-Segundo a definição de \citetexto{Facco2016} para a ferramenta AutoElastic:
-\begin{quote}
-AutoElastic age como um \textit{middleware} permitindo que aplicações HPC iterativas obtenham vantagem do provisionamento de recursos dinâmico de uma infraestrutura de nuvem sem a necessidade de modificações no código fonte. AutoElastic oferece a elasticidade de forma automática, não sendo necessária a configuração de regras por parte do usuário.
-\end{quote} 
-O problema apresentado pelo trabalho é que muitas das abordagens atuais do mercado, para fornecer elasticidade em aplicações HPC, necessitam de uma intervenção do usuário para fazer tais configurações de elasticidade, ou seja, definir o momento em que serão adicionados ou removidos recursos, através de manipulação de máquinas virtuais, disponíveis para a aplicação, seja por uma configuração estática de \textit{threshold} ou de uma configuração no código da aplicação. O desenvolvimento do \textit{middleware} AutoElastic permite um modelo transparente ao usuário em questão de configuração de parâmetros. O AutoElastic possui um protótipo executado pelo autor na plataforma de nuvem OpenNebula e obteve resultados de ganho de desempenho de até 59\% na execução de uma aplicação de integração numérica \textit{CPU-Bound}, quando comparada com outras soluções de elasticidade. 
+\citetexto{7562612} fazem um estudo comparativo de máquinas virtuais e contêineres, além de propor um modelo de \textit{deploy} de aplicações distribuídas em contêineres Docker. Para verificar o modelo proposto, foram realizados testes utilizando duas aplicações HPC que requerem grande capacidade computacional, Graph500 e Linpack (HPL). Para manter um base de comparação, foram realizados execuções com processamento nativo, sem adição de camada de virtualização. Os testes executados mediam os custos computacionais dos processos, considerando diversas combinações de instâncias de máquinas virtuais e instâncias de contêineres, sem levar em consideração a elasticidade.
 
-\subsection{Utilizando Docker para Aplicações de Alto Desempenho}
-\label{trabdocker1}
-Neste estudo, \citetexto{7562612} faz um estudo comparativo de máquinas virtuais e contêineres, além de propor um modelo de \textit{deploy} de aplicações distribuídas em contêineres Docker. Para verificar o modelo proposto, foram realizados testes utilizando duas aplicações HPC que requerem grande capacidade computacional, Graph500 e Linpack (HPL). Para manter um base de comparação, foram realizados execuções com processamento nativo, sem adição de camada de virtualização. Os testes executados mediam os custos computacionais dos processos, considerando diversas combinações de instâncias de máquinas virtuais e instâncias de contêineres, sem levar em consideração a elasticidade. Na conclusão do trabalho, foi notado que contêineres Docker possuem um desempenho mais eficiente para processamento massivo de dados do que máquinas virtuais, que por sua vez, possuem uma implementação de isolamento mais confiável. 
+\citetexto{Dua2014} apresentam um estudo sobre como provedores de PaaS estão utilizando contêineres para encapsular aplicações. O estudo indaga a atual adoção de plataformas baseadas em contêineres e explora diversas implementações de contêineres, entre elas: Linux contêineres, Docker, Warden Container, lmctfy e OpenVZ. A análise foi feita baseada em como cada uma das tecnologias lidam com processos, sistema de arquivos e isolamento de namespaces, dando uma atenção especial à características únicas de cada implementação. Por fim, o trabalho busca fazer uma análise dos fatores que afetam a adoção de contêineres e possíveis funcionalidades que estão em falta para uma nova geração de PaaS.
 
-\subsection{Virtualization vs Containerization to support PaaS}
-\label{trabdocker2}
-% O texto possui uma tabela de comparação das tecnologias, bem como de relação de PaaS com contêineres.
-% Não se aprofunda muito na questão de comparação, mas pode ser extendido.
-\cite{Dua2014} Apresenta um estudo sobre como provedores de PaaS estão utilizando contêineres para encapsular aplicações. O estudo indaga a atual adoção de plataformas baseadas em contêineres e explora diversas implementações de contêineres, entre elas: Linux contêineres, Docker, Warden Container, lmctfy e OpenVZ. A análise foi feita baseada em como cada uma das tecnologias lidam com processos, sistema de arquivos e isolamento de namespaces, dando uma atenção especial à características únicas de cada implementação. Por fim, o trabalho busca fazer uma análise dos fatores que afetam a adoção de contêineres e possíveis funcionalidades que estão em falta para uma nova geração de PaaS.
+O estudo de \citetexto{Xavier2013} aborda a utilização de tecnologias de virtualização para aplicações de alto desempenho, alegando que tais tecnologias foram tradicionalmente evitadas ao longo dos anos por sua adição de camadas que comprometem desempenho, o que é crucial para tais aplicações. Porém, como o advento de implementações de virtualização baseada em contêineres, o autor indaga que é possível se obter uma sobrecarga muito pequena com a utilização de tecnologias como Linux VServer, OpenVZ e Linux contêineres (LXC), chegando a um desempenho quase nativo. Para comparação, foi utilizado o Xen, um modelo tradicional de virtualização. Os testes utilizaram programas de avaliação de desempenho de supercomputadores fornecidos pela NASA \cite{NASA2016}. O LXC executou os programas de teste com praticamente o mesmo potencial que a própria máquina, enquanto a implementação utilizando máquina virtual (XEN) obteve uma sobrecarga de aproximadamente 4.3\%.
 
-De acordo com os autores, contêineres possuem uma vantagem inerente sobre máquinas virtuais, devido à melhorias de performance e redução de tempo de \textit{start up}. Apesar de existirem diversas soluções de contêineres no mercado, cada uma com prós e contras, eles tendem a manter um padrão, principalmente em relação ao uso de \textit{chroot} e \textit{namespaces}. Ressalta-se que Docker aplica camadas adicionais em cima da solução nativa Linux contêineres, tornando a solução muito mais interoperável e mais interessante para provedores que não querem ficar presos à arquiteturas específicas. Já a solução OpenVZ se mostrou melhor em termos de segurança, porém isto associado ao custo de se ter um kernel customizado para a aplicação.
+O trabalho de \citetexto{Zhang2016} aborda a sobrecarga que soluções de hipervisor possuem em relação aos dispositivos de I/O virtualizados. O trabalho apresenta SRV-IOV (\textit{Single Root I/O Virtualization }) para permitir o compartilhamento entre conexões de alto desempenho, como InfiniBand, além de introduzir testes utilizando contêineres, buscando atingir um desempenho mais próximo do nativo. Nos testes, utilizando aplicações de \textit{benchmark} com MPI, as avaliações identificaram que VM com passagem PCI é mais eficiente que VM com SR-IOV habilitado, entretanto, contêineres possuem mais eficiência ao compartilhar recursos de I/O. Em comparação ao desempenho nativo, os testes identificaram uma sobrecarga para contêineres de no máximo 9\% para aplicações HPC.
 
-\subsection{Performance Evaluation of Container-based Virtualization for High Performance Computing Environments}
-\label{trabdocker3}
-% Este estudo possui gráficos de comparação, porém o container está no nível IaaS, um pouco diferente do que preciso.
-\cite{Xavier2013} Inicia o seu estudo abordando a utilização de tecnologias de virtualização para aplicações de alto desempenho, alegando que tais tecnologias foram tradicionalmente evitadas ao longo dos anos por sua adição de camadas que comprometem desempenho, o que é crucial para tais aplicações. Porém, como o advento de implementações de virtualização baseada em contêineres, o autor indaga que é possível se obter uma sobrecarga muito pequena com a utilização de tecnologias como Linux VServer, OpenVZ e Linux contêineres (LXC), chegando a um desempenho quase nativo. Para embasar o questionamento, foi feito um comparativo de desempenho utilizando tais tecnologias e um modelo tradicional de virtualização, o Xen. 
+\citetexto{Adufu2015} conduziram testes para demonstrar que, durante a execução de aplicações científicas em ambientes HPC, o tempo médio de processamento em um sistema com virtualização baseada em contêineres é menor do que o tempo em um sistema baseado em \textit{hypervisor}, isto devido ao tempo de \textit{start-up}. Para gerar os resultados de comparação, foi utilizado a ferramenta \textit{autodock3}, um programa de simulação de modelagem molecular. Para gerenciar os contêineres, a ferramenta Docker foi utilizada, mostrando um gerenciamento de recursos mais eficiente, até mesmo no cenário em que foi alocado mais memória do que realmente disponível fisicamente para as instâncias em execução. 
 
-Os experimentos feitos pelo autor utilizaram programas de avaliação de desempenho de supercomputadores fornecidos pela NASA \cite{NASA2016}. Os programas executados possuem diferentes focos de sobrecarga da aplicação, permitindo identificar o compartamento das implementações sob os mais diversos cenários. A partir da análise, se viu que os sistemas baseado em contêineres possuem uma performance muito próxima da nativa, tanto para CPU, memória, disco e rede, ficando a principal diferença na implementação de gerenciamento de recursos, no caso de  LXC, por exemplo, isolamento e segurança é garantido apenas por uso de \textit{cgroups}. O estudo critica o desempenho das implementações para isolamento de memória, disco e rede, mas considera um sucesso o isolamento de CPU. Apesar do provisionamento de recursos não estar completamente maduro para estas soluções, é importante perceber que para aplicações de alto desempenho, muitas vezes a CPU é o mais importante, além disto, essas aplicações normalmente não exigem a alocação compartilhada de partição do cluster para múltiplos usuários ao mesmo tempo. Por fim, a implementação LXC foi considerada a melhor alternativa para substituir o modelo tradicional de virtualização em aplicações HPC, se for considerado apenas o quesito CPU, no comparativo, a implementação obteve um desempenho muito próximo ao nativo, ou seja, o container executou os programas de teste com praticamente o mesmo potencial que a própria máquina, enquanto a implementação utilizando máquina virtual (XEN) obteve uma sobrecarga de aproximadamente 4.3\%.
+\citetexto{Kominos2017} fazem uma análise sobre as opções de provisionamento na plataforma OpenStack, que são: máquinas virtuais, contêineres e \textit{bare-metal} (instalação do zero nas máquinas). As alternativas são comparadas em relação à CPU, networking, operações de I/O e acesso à RAM, além de medição de tempo de \textit{boot}. Contêineres Docker container apresentaram o tempo de início mais rápido, e obteve um desempenho muito próximo do \textit{bare-metal} nos outros quesitos, este que por sua vez, teve os melhores resultados. Em geral, VMs obtiveram os piores resultados, principalmente em relação ao desempenho de múltiplas vCPUs.
 
-\subsection{Performance Characterization of Hypervisor and Container-based Virtualization for HPC on SR-IOV Enabled InfiniBand Clusters}
-\label{trabdocker4}
+O artigo de \citetexto{Molto2017} descreve um \textit{workflow} para permitir a execução de uma aplicação tanto em ambientes virtualizados, como em ambientes baseados em contêineres, o que foi chamado de Infraestrutura Híbrida de Computação Distribuída (IHCD), utilizando ferramentas open-source do projeto INDIGO-DataCloud. O principal problema abordado é a falta de interoperabilidade de uma imagem entre hipervisores (VMs) e contêineres. O resultado é uma ferramenta que permite a criação de um \textit{template} com as especificações necessárias da aplicação e a plataforma OpenNebula cria a imagem e a disponibiliza conforme solicitado (Docker ou VM). O tempo total deste processo para uma aplicação de teste é de 20:48 (minutos:segundos) para VM e 7:25 para Docker.
 
-Neste trabalho, \citetexto{Zhang2016} fazem uma análise das vantagens de se utilizar virtualização em ambientes, como independência de hardware, isolamento e fácil gerenciamento, através de tecnologias de \textit{hypervisor}, como Xen, KVM e VMWare, mostrando que sua utilização hoje, é fundamental para o desenvolvimento de computação em nuvem. Especificamente, se aborda a sobrecarga que tais soluções possuem em relação aos dispositivos de I/O virtualizados.
+Para finalizar, \citetexto{Zheng2017} avaliam as diferenças fundamentais entre Docker e máquinas virtuais, contrariando os outros trabalhos relacionados, porquê apresenta situações onde máquinas virtuais podem apresentar um desempenho melhor que contêineres Docker. Nos benchmarks executados, o Docker atingiu um gargalo de velocidade em operações de disco de byte-a-byte, enquanto os testes com VMs atingiram resultados parecidos com o desempenho nativo para resolver o problema N-Queens. Mesmo assim, o trabalho ressalva que as diferenças de \textit{overhead} de desempenho entre os tipos de virtualização ocorrem não somente no modo implementado, como também depende da aplicação em execução. 
 
-A utilização de passagem PCI (\textit{Peripheral Component Interconnec}) fornece os meios para dar uso exclusivo de recursos para dispositivos de I/O, como controlador de disco, rede, placa de vídeo, etc, dando um melhor desempenho para a máquina virtual. Em contrapartida, isto impede o uso compartilhado entre diversas máquinas virtuais de determinado recurso. O trabalho apresenta SRV-IOV (\textit{Single Root I/O Virtualization }) para permitir o compartilhamento entre conexões de alto desempenho, como InfiniBand, além de introduzir testes utilizando contêineres ao invés de máquinas virtuais, buscando atingir um desempenho mais próximo do nativo.
-
-Em resumo dos testes executados, utilizando aplicações de \textit{benchmark} com MPI, as avaliações identificaram que VM com passagem PCI é mais eficiente que VM com SR-IOV habilitado, entretanto a solução é a maneira mais eficiente de se poder compartilhar recursos de I/O. No geral, soluções baseadas em contêineres conseguem entregar com mais desempenho que modelos baseados em hypervisor. Em comparação ao desempenho nativo, os testes identificaram uma sobrecarga de no máximo 9\% para aplicações HPC.
-
-\subsection{Is Container-Based Technology a Winner for High Performance Scientific Applications?}
-\label{trabdocker5}
-
-\citetexto{Adufu2015} Conduziu testes para demonstrar que, durante a execução de aplicações científicas em ambientes HPC, o tempo médio de processamento em um sistema com virtualização baseada em contêineres é menor do que o tempo em um sistema baseado em \textit{hypervisor}, isto devido ao tempo de \textit{start-up}. Para gerar os resultados de comparação, foi utilizado a ferramenta \textit{autodock3}, um programa de simulação de modelagem molecular. Para gerenciar os contêineres, a ferramenta Docker foi utilizada, mostrando um gerenciamento de recursos mais eficiente, até mesmo no cenário em que foi alocado mais memória do que realmente disponível fisicamente para as instâncias em execução. 
-O trabalho conduzido indicou que sistemas baseados em contêineres são mais eficientes que sistemas baseados em máquinas virtuais, além de possuir um gerenciamento de memória mais eficiente entre as aplicações executadas em paralelo, o que o torna uma solução mais atrativa para o desenvolvimento de ambientes para aplicações HPC.
-
-\subsection{Comparação dos trabalhos relacionados}
+\subsection{Discussão e Lacunas}
 \label{comparacao}
 Até esta seção, foram mostrados os estudos existentes para implementações de soluções de desenvolvimento de aplicações HPC, que utilizam os dois conceitos de virtualização, baseado em contêineres e em \textit{hypervisor}. Na tabela \ref{tab:table2} é feito um resumo do resultado destes estudos, elencando as principais características dos trabalhos conduzidos. Podemos notar que, apesar do trabalho de Facco \citetexto{Facco2016} apresentar um modelo elástico para aplicações HPC, não existem outros estudos que mostrem o comportamento de contêineres sob estas condições. Os demais trabalhos fazem uma análise do desempenho de contêineres, porém sem instanciação dinâmica de contêineres pelo gerenciador, o que daria o aspecto de um sistema elástico.
 
@@ -308,30 +281,32 @@ Até esta seção, foram mostrados os estudos existentes para implementações d
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{|l|l|l|l|l|l|l|}
 \hline
-\textbf{Trabalho} & \textbf{Tecnologia}  & \textbf{Elasticidade} & \textbf{Base de Comparação}     & \textbf{Métricas}                                                                   & \textbf{Plataforma}  & \textbf{Testes}                                                              \\ \hline
-\cite{Facco2016}       & VM                   & Sim                   & \begin{tabular}[c]{@{}l@{}}nodo puramente alocado\\(nativo) \end{tabular}  & desempenho, custo e energia                                                         & OpenNebula           & cálculo de integrais                                                         \\ \hline
-\cite{7562612}                 & Docker               & Não                   & CentOS 7 64-bit 3.10.0          & Performance por instancias                                                          & OpenStack            & \begin{tabular}[c]{@{}l@{}} MPI com Graph500,\\ Linpack\end{tabular}                                                   \\ \hline
-\cite{Xavier2013}                 & \begin{tabular}[c]{@{}l@{}} LXC, OpenVZ,\\ VServer \end{tabular} & Não                   & Ubuntu 10.04 LTS                & \begin{tabular}[c]{@{}l@{}}diversos tipos de \\ recursos em único nodo\end{tabular} & 4 computadores fixos & \begin{tabular}[c]{@{}l@{}}Linpack, STREAM, \\ IOZone, NetPIPE\end{tabular} \\ \hline
-\cite{Zhang2016}                 & Docker               & Não                   & CentOS Linux                    & \begin{tabular}[c]{@{}l@{}}desempenho de operações\\ de comunicação\end{tabular}    & OpenStack            & \begin{tabular}[c]{@{}l@{}}MPI com Graph500,\\ NAS, LAMMPS\end{tabular}     \\ \hline
-\cite{Adufu2015}                 & Docker               & Não                   & Ubuntu 14.04 Trusty Tahr        & \begin{tabular}[c]{@{}l@{}}Desempenho de memória \\ RAM\end{tabular}                & OpenStack            & \textit{autodock3}                                                                    \\ \hline
+\textbf{Trabalho} & \textbf{Tecnologia}  & \textbf{Elasticidade} & \begin{tabular}[c]{@{}l@{}}\textbf{Base de}\\\textbf{Comparação} \end{tabular}     & \textbf{Métricas}                                                                   & \textbf{Plataforma}  & \textbf{Testes}                                                              \\ \hline
+\cite{Facco2016}       & VM                   & Sim                   & Ubuntu 10.04 &\begin{tabular}[c]{@{}l@{}} desempenho, custo e\\ energia\end{tabular}                                                          & OpenNebula           & cálculo de integrais                                                         \\ \hline
+\cite{7562612}                 & Docker               & Não                   & CentOS 7 3.10         & \begin{tabular}[c]{@{}l@{}} Performance por \\instancias  \end{tabular}                                                        & OpenStack            & \begin{tabular}[c]{@{}l@{}} MPI com Graph500,\\ Linpack\end{tabular}                                                   \\ \hline
+\cite{Xavier2013}                 & \begin{tabular}[c]{@{}l@{}} LXC, OpenVZ,\\ VServer \end{tabular} & Não                   & Ubuntu 10.04               & \begin{tabular}[c]{@{}l@{}}diversos tipos de \\ recursos em único nó\end{tabular} & Não & \begin{tabular}[c]{@{}l@{}}Linpack, STREAM, \\ IOZone, NetPIPE\end{tabular} \\ \hline
+\cite{Zhang2016}                 & Docker               & Não                   & CentOS Linux                    & \begin{tabular}[c]{@{}l@{}}desempenho \\ de comunicação\end{tabular}    & OpenStack            & \begin{tabular}[c]{@{}l@{}}MPI com Graph500,\\ NAS, LAMMPS\end{tabular}     \\ \hline
+\cite{Adufu2015}                 & Docker               & Não                   & Ubuntu 14.04& \begin{tabular}[c]{@{}l@{}}Desempenho de RAM\end{tabular}                & OpenStack            & \textit{autodock3}                                                                    \\ \hline
+\cite{Kominos2017} & Docker& Não & Ubuntu 14.04&\begin{tabular}[c]{@{}l@{}} Desempenho de CPU,\\ rede, RAM e disco\end{tabular}& OpenStack &\begin{tabular}[c]{@{}l@{}} ParallelPXZ,\\ Netperf, SysBench \end{tabular}\\ \hline
+\cite{Molto2017} & Docker & Não & Ubuntu 14.04 & Provisionamento& OpenNebula & Tempo médio \\ \hline
+\cite{Zheng2017} & Docker & Não & Ubuntu 15.10 &\begin{tabular}[c]{@{}l@{}} Desempenho de CPU,\\disco e RAM\end{tabular} & Não &\begin{tabular}[c]{@{}l@{}} Iperf, STREAM,\\HardInfo, Bonnie++\end{tabular}\\ \hline
 \end{tabular}}
+\fonte{Elaborado pelo autor}
 \end{table}
 
 Os estudos mostrados na tabela \ref{tab:table2} que abordaram a utilização da tecnologia de contêineres, exibem resultados mais favoráveis à estas implementações em comparação ao método tradicionais de virtualização, abordando diversos aspectos inerentes à virtualização de recursos, como operações de I/O, desempenho de memória RAM e consumo de energia. Todos estes são aspectos fundamentais para uma solução de ambiente HPC eficiente. Embora os trabalhos mostrem resultados aplicando programas de \textit{benchmark} para medir o desempenho da infraestrutura, não foi encontrado um estudo que verificasse o desempenho elástico de contêineres para um modelo de provisionamento de recursos de forma dinâmica, como o AutoElastic mostra, utilizando máquinas virtuais.
 
-%Melhorar
-Concluo que o aproveitamento máximo de recursos, utilizando uma camada de virtualização de fácil implementação e não muito dependente do sistema operacional é objetivo de um ambiente próprio para execução de aplicações de alto desempenho. Portanto, os trabalhos analisados deixaram uma lacuna em relação a esta questão, por não apresentarem uma solução dinâmica e elástica, que utilize uma tecnologia mais eficiente para processamento do que máquinas virtuais para alocação de recursos em aplicações de alto desempenho. Alguns trabalhos abordaram o uso de contêineres para aplicações de alto desempenho, porém apenas executando programas de testes para comprovar a possibilidade de uso, sem aplicar em infraestrutura que possa fornecer os recursos de forma elástica para as aplicações. O objetivo do trabalho que traz o AutoElastic de \citetexto{Facco2016}, juntamente com a possibilidade de se otimizar a utilização de recursos utilizando contêineres é o que justificou a abordagem tomada por este presente trabalho.
+Sendo assim, os trabalhos analisados deixaram uma lacuna em relação a esta questão, por não apresentarem uma solução dinâmica e elástica, que utilize uma tecnologia mais eficiente para processamento do que máquinas virtuais para alocação de recursos. É possível, então, aproveitar essa lacuna e fazer uma validação da elasticidade de aplicações HPC com contêineres, através de modificações no modelo AutoElastic para suportar essa tecnologia em suas operações.
 
 %=======================================================================
 % Modelo
 %=======================================================================
-\section{Modelo}
+\section{Benchmark DoCB}
 \label{model}
 
-Neste capítulo apresentaremos nosso modelo e debateremos em termos gerais as questões de projeto na seção \ref{questao}. Na próxima seção \ref{arquitetura}, abordaremos sua arquitetura e a modificação proposta. Iremos definir mais especificamente como o protótipo será implementado na seção \ref{prototype}, também iremos definir como será feita a avaliação na seção \ref{avaliacao}. Não pretendemos aqui extinguir tais assuntos, mas mostrar as direções que buscamos tomar com este projeto.
+Neste capítulo apresentaremos nosso modelo e debateremos em termos gerais as questões de projeto na seção \ref{questao}. Na próxima seção \ref{arquitetura}, abordaremos sua arquitetura. 
 
-
-\section{Questões de projeto}
+\subsection{Questões de projeto}
 \label{questao}
 
 Objetivo deste trabalho é propor uma melhoria para o modelo de elasticidade em nuvem para aplicações HPC iterativas (AutoElastic). A partir da substituição do componente de criação de recursos com a criação de máquinas virtuais por contêineres, espera-se atingir uma melhoria no tempo de espera para se ter os recursos computacionais disponíveis após a requisição, bem como um desempenho melhor na execução de aplicações HPC. Com os resultados, será analisado em que situações os contêineres tem um desempenho melhor, podendo propor uma abordagem diferente de ação quando se atinge os \textit{thresholds}, fazendo o melhor uso da tecnologia. Portanto, o modelo proposto tem como escopo somente trabalhar nos recursos computacionais fornecidos para o modelo AutoElastic. 
@@ -345,7 +320,7 @@ Para que se possa manter o foco no real propósito deste trabalho, partiremos do
 
 Não será criada uma API detalhada neste momento. E até mesmo os resultados da comparação não receberão um tratamento para serem consumidos por uma ou outra plataforma específica. Pois entendemos que estas são questões secundárias, e não influenciam no propósito principal do trabalho. Optando assim por manter baixa a complexidade do projeto. E de igual forma, usaremos uma plataforma de nuvem arbitrária que julgarmos mais apropriada para a execução dos testes com o modelo, sem preocupação com compatibilidade com outras pelos mesmos motivos já descritos nesta seção.
 
-\section{Arquitetura}
+\subsection{Arquitetura}
 \label{arquitetura}
 
 Este trabalho parte da implementação do modelo AutoElastic para propor uma modificação em sua arquitetura, acrescentando a possibilidade de utilizar contêineres ao invés de máquinas virtuais. O AutoElastic é um \textit{middleware} que permite que o usuário possa obter elasticidade para suas aplicações, sem depender de alterações no código-fonte. Operando no nível de PaaS, o modelo permite que aplicações iterativas obtenham elasticidade através de operações de alocação e consolidação de instâncias de máquinas virtuais, além de nodos físicos. O \textit{framework} atual é composto por um Gerenciador, um componente independente da infraestrutura, não interferindo no resultado da execução e podendo gerenciar os recursos remotamente, através do acesso de um computador \textit{frontend} do \textit{cluster} de computadores.
@@ -367,7 +342,7 @@ O gerenciador analisa periodicamente as instâncias de contêineres que estão a
 
 A base dados mostrada na figura \ref{fig:arquitetura} é utilizada para armazenar as imagens utilizadas pelo nó \textit{frontend}, além de permitir um espaço de comunicação entre o gerenciador e as instâncias de contêineres em execução, sendo este espaço acessável apenas pelos computadores do \textit{cluster}. A utilização de uma área compartilhada, para comunicação entre computadores virtualizados é uma prática comum, quando se falando de nuvens privadas. A área é acessada pelas instâncias através de pacotes SSH, um meio seguro de acesso ao sistema de arquivos remoto, que no caso fica fornecido pelo nó \textit{frontend}.
 
-\section{Implementação do Protótipo}
+\section{Implementação}
 \label{prototype}
 
 Para a execução dos experimentos em nuvem, utilizaremos o protótipo desenvolvido por Facco \citetexto{Facco2016}, que consiste de uma aplicação em Java para gerenciamento de elasticidade, o AutoElastic. O modelo será estendido, passando a considerar a utilização de contêineres. O protótipo atual consiste de uma ferramenta que gerencia uma nuvem OpenNebula, sendo o controle do ambiente realizado através de uma API em Java que o \textit{middleware} OpenNebula oferece, como por exemplo, a criação de máquinas virtuais dentro do \textit{cluster}. 
@@ -379,7 +354,7 @@ Escolhemos o Docker como plataforma de manipulação de contêineres, justamente
 ONEDock é um conjunto de extensões para o OpenNebula para utilização de Docker contêineres como entidades de primeira classe, assim como se fossem Máquinas Virtuais (VM) leves. Para tal, Docker é configurado para atual como um \textit{hypervisor}, comportando-se então, como o KVM ou outro \textit{hypervisor} fazem no contexto de OpenNebula.
 \end{quote} 
 
-Este conjunto de ferramentas é open-source, o que possibilitou a codificação de características não suportadas pela distribuição atual da ferramenta, como veremos logo adiante na seção \section{avaliacao}.
+Este conjunto de ferramentas é open-source, o que possibilitou a codificação de características não suportadas pela distribuição atual da ferramenta, como veremos logo adiante na seção \ref{avaliacao}.
 
 \subsection{Acesso à rede}
 O OpenNebula permite que seja definida uma interface de rede no momento de deploy de uma máquina virtual, porém o Docker possui uma configuração própria de interface de rede para o computador no qual está sendo executado, que é visível para todos os contêineres em execução na mesma máquina, porém não acessível de fora deste computador. Cada computador possui um processo Docker que gerencia os contêineres, a entrega de uma imagem do frontend para os nós é feita através de entrega da imagem no diretório compartilhado e execução remota de comandos Docker, como mostrado na figura \ref{fig:provision-use-case}.
@@ -422,7 +397,7 @@ As técnicas de análise de \textit{Speedup} Elástico e Eficiência Elástica s
 
 A partir da utilização de tais técnicas de avaliação, pode-se considerar vários cenários de implementação da nuvem, ou seja, as combinações serão exploradas independente de quantos núcleos de processamento estão disponível para cada nó computacional, isto com o objetivo de identificar as situações em que os modelos terão comportamentos discrepantes. Dessa forma, será feita também uma análise comparando o tempo de provisionamento dos recursos, levando em consideração todos os momentos envolvidos, que são: a busca da imagem no nó principal, o tempo de transferência desta imagem para o nó de execução, o tempo de criação da instância a partir da imagem e o tempo de inicialização da instância para rodar a aplicação. Estes passos são considerados tanto para máquinas virtuais quanto contêineres. 
 
-\section{Cenários}
+\subsection{Cenários}
 \label{cenarios}
 
 Para a execução dos cenários de teste, estaremos utilizando a aplicação desenvolvida por \citetexto{Facco2016}, o programa consiste de um código para rodar cálculos de integrais em uma rede, seguindo o modo master-slave, sob diferentes tipos de carga, no nosso caso, utilizaremos a carga ascendente e descendente. O objetivo da aplicação é irrelevante, pois ela será utilizada apenas para fazer o benchmarking dos cenários de elasticidade. A aplicação realizará cálculos numéricos e distribuirá porções de trabalho para cada nó, interligados por MPI. A aplicação fica ciente de novos nós disponíveis a partir de um sistema de comunicação através de arquivos de texto, disponibilizados pela aplicação AutoElastic durante as operações de provisionamento de recursos.
@@ -490,7 +465,7 @@ actions and process data. We follow this implementation
 because the AutoElastic Manager cannot access the NFS
 directly, unless it is placed inside the cloud.
 
-\section{Métricas}
+\subsection{Métricas}
 \label{metricas}
 
 De acordo com <cite alguem>, para mantermos o 
@@ -502,7 +477,7 @@ Table 4, the objective is to preserve the truth of
 Inequality (7):
 Fig. 6. (a) Template of the input file for the tests; (b), (c), (d) and (e) are Cost App Time Resource
 
-\section{Avaliação}
+\section{Resultados}
 \label{avaliacao}
 
 Esta seção apresenta detalhes sobre o benchmarking DoCPB executado e também irá cobrir os resultados, conforme comentado na seção `introdução'. 
@@ -576,7 +551,7 @@ Esta seção apresenta detalhes sobre o benchmarking DoCPB executado e também i
 %=======================================================================
 % CONCLUSÃO
 %=======================================================================
-\chapter{Conclusão}
+\section{Conclusão}
 \label{conclusion}
 
 Descrever aqui o que foi apresentado ``Neste trabalho foi apresentado''. O que houve de contribuição científica.
@@ -585,15 +560,10 @@ Possível uso em outras áreas.
 
 - Dados numéricos, números, percentual mais significativo.
 
-\section{Contribuições Esperadas}
-\label{contribuicoes}
-
+%\section{Contribuições Esperadas}
 A questão de pesquisa original tratava da possibilidade de se otimizar a camada de virtualização de ambientes em nuvem para execução de aplicações HPC, com o objetivo de identificar também as vantagens e situações onde a virtualização por contêineres pode ser uma melhor alternativa. A partir da avaliação dos trabalhos relacionados, foi concluído que em uma comparação 1 pra 1 de máquina virtual e container, a segunda tecnologia se sobressai em questões de desempenho, confirmando, assim, que é possível otimizar o modelo de elasticidade em nuvem ao substituir a camada de virtualização, passando a utilizar contêineres. Sendo assim, decidimos expandir a questão para analisar o desempenho em situações de elasticidade, onde os recursos precisam ser provisionados conforme a demanda, passando a identificar também o que ocorre e o tempo necessário para as etapas de provisionamento. 
 
 Esperamos também que o modelo e resultados da pesquisa possam servir com um guia para outros pesquisadores poderem identificar qual a tecnologia mais adequada para seus objetivos, a partir da verificação de quais parâmetros são necessários. Pois pretendemos identificar, por exemplo, qual solução é mais indicada para aplicações altamente paralelizadas e cenários onde a variação de consumo de recursos pode variar bastante.
-
-\section{Trabalhos Futuros}
-\label{futuros}
 
 Explicar aqui o que pode ter de furo na implementação, o que não deu tempo de fazer etc.
 
