@@ -206,7 +206,7 @@ Alguns dos conceitos chave para compreender a tecnologia são descritos abaixo \
 
 \subsection{Virtualização vs Contêinerização}
 \label{virtualization}
-Uma camada de virtualização pode ajudar a isolar um ambiente compartilhado de computadores. Em \textit{clusters} de HPC, normalmente os recursos são compartilhados entre mais usuários e isto faz com que possa ocorrer problemas nesse compartilhamento \cite{Xavier2013}. É possível utilizar uma nuvem sem virtualização, o que trará vantagens em relação ao desempenho e evita o \textit{overhead} nos recursos, porém isto também significa falta de flexibilidade, e dificuldade de utilização, pois os recursos não são compartilhados entres o nodos \cite{Kominos2017}.
+Uma camada de virtualização pode ajudar a isolar um ambiente compartilhado de computadores. Em \textit{clusters} de HPC, normalmente os recursos são compartilhados entre mais usuários e isto faz com que possa ocorrer problemas nesse compartilhamento \cite{Xavier2013}. É possível utilizar uma nuvem sem virtualização, o que trará vantagens em relação ao desempenho e evita o \textit{overhead} nos recursos, porém isto também significa falta de flexibilidade, e dificuldade de utilização, pois os recursos não são compartilhados entres o nós \cite{Kominos2017}.
 
 Um \textit{hypervisor}, ou gerenciador de máquinas virtuais, é um programa que roda no sistema operacional host, fornecendo os recursos de hardware deste para uma série de máquinas virtuais, neste caso, estas máquinas virtuais compartilham o mesmo hardware. Como mostrado na figura~\ref{fig:vmvsdocker}, o hypervisor é responsável por fornecer o acesso aos recursos para cada sistema operacional dentro das máquinas virtuais, mas com o custo deste gerenciamento como processamento \cite{Zhang2016}. 
 
@@ -256,7 +256,7 @@ O AutoElastic, segundo a definição de \citetexto{7090978}, age como um \textit
 
 \citetexto{7562612} fazem um estudo comparativo de máquinas virtuais e contêineres, além de propor um modelo de \textit{deploy} de aplicações distribuídas em contêineres Docker. Para verificar o modelo proposto, foram realizados testes utilizando duas aplicações HPC que requerem grande capacidade computacional, Graph500 e Linpack (HPL). Para manter um base de comparação, foram realizados execuções com processamento nativo, sem adição de camada de virtualização. Os testes executados mediam os custos computacionais dos processos, considerando diversas combinações de instâncias de máquinas virtuais e instâncias de contêineres, sem levar em consideração a elasticidade.
 
-\citetexto{Dua2014} apresentam um estudo sobre como provedores de PaaS estão utilizando contêineres para encapsular aplicações. O estudo indaga a atual adoção de plataformas baseadas em contêineres e explora diversas implementações de contêineres, entre elas: Linux contêineres, Docker, Warden Container, lmctfy e OpenVZ. A análise foi feita baseada em como cada uma das tecnologias lidam com processos, sistema de arquivos e isolamento de namespaces, dando uma atenção especial à características únicas de cada implementação. Por fim, o trabalho busca fazer uma análise dos fatores que afetam a adoção de contêineres e possíveis funcionalidades que estão em falta para uma nova geração de PaaS.
+\citetexto{Dua2014} apresentam um estudo sobre como provedores de PaaS (\textit{Platform as a Service})estão utilizando contêineres para encapsular aplicações. O estudo indaga a atual adoção de plataformas baseadas em contêineres e explora diversas implementações de contêineres, entre elas: Linux contêineres, Docker, Warden Container, lmctfy e OpenVZ. A análise foi feita baseada em como cada uma das tecnologias lidam com processos, sistema de arquivos e isolamento de namespaces, dando uma atenção especial à características únicas de cada implementação. Por fim, o trabalho busca fazer uma análise dos fatores que afetam a adoção de contêineres e possíveis funcionalidades que estão em falta para uma nova geração de PaaS.
 
 O estudo de \citetexto{Xavier2013} aborda a utilização de tecnologias de virtualização para aplicações de alto desempenho, alegando que tais tecnologias foram tradicionalmente evitadas ao longo dos anos por sua adição de camadas que comprometem desempenho, o que é crucial para tais aplicações. Porém, como o advento de implementações de virtualização baseada em contêineres, o autor indaga que é possível se obter uma sobrecarga muito pequena com a utilização de tecnologias como Linux VServer, OpenVZ e Linux contêineres (LXC), chegando a um desempenho quase nativo. Para comparação, foi utilizado o Xen, um modelo tradicional de virtualização. Os testes utilizaram programas de avaliação de desempenho de supercomputadores fornecidos pela NASA \cite{NASA2016}. O LXC executou os programas de teste com praticamente o mesmo potencial que a própria máquina, enquanto a implementação utilizando máquina virtual (XEN) obteve uma sobrecarga de aproximadamente 4.3\%.
 
@@ -304,51 +304,67 @@ Sendo assim, os trabalhos analisados deixaram uma lacuna em relação a esta que
 \section{Benchmark DoCB}
 \label{model}
 
-Neste capítulo apresentaremos nosso modelo e debateremos em termos gerais as questões de projeto na seção \ref{questao}. Na próxima seção \ref{arquitetura}, abordaremos sua arquitetura. 
+Neste capítulo apresentaremos o modelo do Docker Containers Benchmark (DoCB), uma análise de viabilidade de elasticidade em nuvem para contêineres, em comparação ao modelo tradicional, que utiliza máquinas virtuais. e debateremos em termos gerais as questões de projeto na seção \ref{questao}. Na próxima seção \ref{arquitetura}, abordaremos sua arquitetura. 
 
 \subsection{Questões de projeto}
 \label{questao}
 
-Objetivo deste trabalho é propor uma melhoria para o modelo de elasticidade em nuvem para aplicações HPC iterativas (AutoElastic). A partir da substituição do componente de criação de recursos com a criação de máquinas virtuais por contêineres, espera-se atingir uma melhoria no tempo de espera para se ter os recursos computacionais disponíveis após a requisição, bem como um desempenho melhor na execução de aplicações HPC. Com os resultados, será analisado em que situações os contêineres tem um desempenho melhor, podendo propor uma abordagem diferente de ação quando se atinge os \textit{thresholds}, fazendo o melhor uso da tecnologia. Portanto, o modelo proposto tem como escopo somente trabalhar nos recursos computacionais fornecidos para o modelo AutoElastic. 
+Para obter a elasticidade em nuvem, utilizaremos a ferramenta AutoElastic. Nesse caso, iremos adicionar ao componente de criação de recursos a possibilidade de instanciar contêineres além máquinas virtuais, ficando transparente ao usuário essa opção, minimizando a configuração necessária para utilização das opções de virtualização. A elasticidade se dará no momento em que a aplicação decidir adicionar recursos para otimizar a execução das aplicações, utilizando os critérios definidos. Como as imagens de contêineres possuem um tamanho significativamente menor que o de uma máquina virtual, o gerenciador poderá lançar \textit{n} instâncias de contêineres para um mesmo host, obtendo vantagens ao executar aplicações paralelas. 
 
-
-No início deste trabalho propusemos a seguinte questão de pesquisa: É possível melhorar o modelo de elasticidade em nuvem para aplicações HPC iterativas, a partir da utilização de contêineres, diminuindo o tempo de provisionamento, bem como o processamento gasto com gerenciamento de recursos? Sabemos, até o ponto deste estudo, que é possível sim ter um ambiente virtualizado utilizando contêineres, que pode substituir um ambiente com virtualização baseada em \textit{hypervisor}. Mas para responder a pergunta por completo, ou seja, identificar o ganho de economia de recursos e de desempenho, é necessário fazer ajustes baseados no desempenho do modelo após a substituição do componente, sempre se preocupando em que se permita utilizá-lo em tempo de execução sem um aumento acentuado de \textit{overhead}. 
-
-De acordo com \citetexto{Adufu2015}, Docker contêineres possuem um melhor gerenciamento de recursos quando possui contêineres executando em paralelo com mais memória alocada do que realmente disponível fisicamente, o que pode ser um recurso de ajuste fino interessante. Sendo assim, o modelo proposto irá considerar a utilização de uma fórmula a ser identificada para a utilização em paralelo de contêineres, bem como uma definição de fórmula para melhor alocação de memória para uma execução mais eficiente dos contêineres.
-
-Para que se possa manter o foco no real propósito deste trabalho, partiremos do modelo atual do AutoElastic, que já possui uma implementação definida como protótipo. Portanto, como resultado deste modelo não teremos uma implementação genérica ou adaptável, ou ao menos esta não será uma preocupação de projeto, visto que o objetivo principal é a otimização de desempenho em comparação ao modelo atual, modificando a forma de provisionar os recursos para o \textit{framework}. 
-
-Não será criada uma API detalhada neste momento. E até mesmo os resultados da comparação não receberão um tratamento para serem consumidos por uma ou outra plataforma específica. Pois entendemos que estas são questões secundárias, e não influenciam no propósito principal do trabalho. Optando assim por manter baixa a complexidade do projeto. E de igual forma, usaremos uma plataforma de nuvem arbitrária que julgarmos mais apropriada para a execução dos testes com o modelo, sem preocupação com compatibilidade com outras pelos mesmos motivos já descritos nesta seção.
+O gerenciador AutoElastic foi escolhido por permitir virtualização de acordo com a utilização dos recursos computacionais já alocados. A elasticidade aplicada pelo gerenciador será horizontal, ou seja, a elasticidade é aplicada ao alocar e desalocar recursos virtualizados, e não na configuração de hardware. A métrica utilizada pelo gerenciador será a média de CPU dos contêineres alocados, pois o AutoElastic utiliza a média de CPU das máquinas virtuais para tomada de decisão.
 
 \subsection{Arquitetura}
 \label{arquitetura}
+Este trabalho parte da implementação do modelo AutoElastic para propor uma modificação em sua arquitetura, acrescentando a possibilidade de utilizar contêineres ao invés de máquinas virtuais. O AutoElastic é um \textit{middleware} que permite que o usuário possa obter elasticidade para suas aplicações, sem depender de alterações no código-fonte. Operando no nível de PaaS, o modelo permite que aplicações iterativas obtenham elasticidade através de operações de alocação e consolidação de instâncias de máquinas virtuais em nós físicos. O \textit{framework} atual é composto por um Gerenciador, um componente independente da infraestrutura, não interferindo no resultado da execução e podendo gerenciar os recursos remotamente, através do acesso de um computador \textit{frontend} do \textit{cluster} de computadores.
 
-Este trabalho parte da implementação do modelo AutoElastic para propor uma modificação em sua arquitetura, acrescentando a possibilidade de utilizar contêineres ao invés de máquinas virtuais. O AutoElastic é um \textit{middleware} que permite que o usuário possa obter elasticidade para suas aplicações, sem depender de alterações no código-fonte. Operando no nível de PaaS, o modelo permite que aplicações iterativas obtenham elasticidade através de operações de alocação e consolidação de instâncias de máquinas virtuais, além de nodos físicos. O \textit{framework} atual é composto por um Gerenciador, um componente independente da infraestrutura, não interferindo no resultado da execução e podendo gerenciar os recursos remotamente, através do acesso de um computador \textit{frontend} do \textit{cluster} de computadores.
-
-A figura \ref{fig:arquitetura} mostra como é a arquitetura do modelo proposto. Cada nó possui um gerenciador de container, o Docker. O número de contêineres pode partir de 1 container por nó, a partir do container do processo mestre da aplicação, até vários contêineres por nó, definido pelo usuário do gerenciador. ``Lee
-et al. [44],''.  
+A figura \ref{fig:arquitetura} mostra como é a arquitetura do modelo proposto. Cada nó possui um gerenciador de container, o Docker. O número de contêineres pode partir de 1 contêiner por nó, a partir do contêiner do processo mestre da aplicação, até vários contêineres por nó, definido pelo usuário do gerenciador \cite{6307065}.
 
 \begin{figure}
 	\caption{Arquitetura do Modelo. Aqui, \textit{n} representa o número de nós disponíveis, e \textit{m} o número de Docker contêineres.}
 	\label{fig:arquitetura}
 	\centering%
+	\vspace{-0.5\baselineskip}
 	\begin{minipage}{0.8\textwidth}
-		\includegraphics[width=\textwidth]{arquitetura}
+		\includegraphics[width=\textwidth]{images/arquitetura}
 		\fonte{Elaborado pelo autor}
 	\end{minipage}
 \end{figure}
 
 O gerenciador analisa periodicamente as instâncias de contêineres que estão ativas, e verifica se é necessário um adição ou remoção de recursos, dependendo da configuração de \textit{threshold}. No modelo proposto, o usuário pode definir o número minimo e máximo de contêineres por nó e quantos poderão operar na execução da aplicação. Ainda, a arquitetura garante que a aplicação em execução não tem o seu desempenho afetado pela adição ou remoção de recursos, pois o gerenciador atua de forma isolada do \textit{cluster} de computadores. 
 
-A base dados mostrada na figura \ref{fig:arquitetura} é utilizada para armazenar as imagens utilizadas pelo nó \textit{frontend}, além de permitir um espaço de comunicação entre o gerenciador e as instâncias de contêineres em execução, sendo este espaço acessável apenas pelos computadores do \textit{cluster}. A utilização de uma área compartilhada, para comunicação entre computadores virtualizados é uma prática comum, quando se falando de nuvens privadas. A área é acessada pelas instâncias através de pacotes SSH, um meio seguro de acesso ao sistema de arquivos remoto, que no caso fica fornecido pelo nó \textit{frontend}.
+A base dados mostrada na figura \ref{fig:arquitetura} é utilizada para armazenar as imagens utilizadas pelo nó \textit{frontend}, além de permitir um espaço de comunicação entre o gerenciador e as instâncias de contêineres em execução, sendo este espaço acessável apenas pelos computadores do \textit{cluster}. A utilização de uma área compartilhada, para comunicação entre computadores virtualizados é uma prática comum, quando se falando de nuvens privadas. No contexto de Docker, a base de dados é um banco local \textit{Docker Repository} e a área de dados comum é montada pelos contêineres utilizando a ferramenta de \textit{volumes}, que monta um diretório compartilhado.
 
-\section{Implementação}
+\subsection{Elasticidade}
+As aplicações de HPC normalmente lidam com computação intensiva, por esse motivo, iremos nos concentrar apenas na métrica de CPU para tomada de decisão. O Gerenciador captura periodicamente os valores de carga de CPU dos objetos virtualizados (máquina virtual ou contêiner) que estão executando os processos. É feita uma média desses valores e estes são armazenados juntamente com coletas operações anteriores para realizar o cálculo de carga geral. O valor resultante do cálculo é avaliado conforme regras definidas de \textit{threshold} superior e inferior, que são definidos por valores de 0\% a 100\% respectivamente. 
+
+O AutoElastic possui em sua implementação algumas opções de algoritmo de avaliação, entre elas o algoritmo que opera segundo o conceito \textit{Aging}. Segundo \citetexto{Tanenbaum03}, a técnica utiliza uma suavização exponencial simples, aplicando maior peso para a última coleta para definir a carga. O algoritmo permite suavizar picos de carga (superior e inferior), evitando operações de elasticidade desnecessárias, causadas por falso-positivos em termos de atingir um \textit{threshold}. Podemos ver, na Figura~\ref{fig:aging}, um caso simples onde as operações de elasticidade ocorreriam se fosse considerado apenas a carga real medida, porém, com a técnica de \textit{Aging}, evitamos estas operações de elasticidade. Assim, foi escolhido esse algoritmo para evitar ruídos nas leituras que possam prejudicar a execução eficiente da aplicação. Os \textit{thresolds} superior e inferior são fixos, sendo esses informados previamente antes do iniciar o monitoramento.
+
+\begin{figure}
+	\caption{Utilização da técnica de \textit{Aging} para alocar e desalocar recursos de de forma suavizada}
+	\label{fig:aging}
+	\centering%
+	\vspace{-0.5\baselineskip}
+	\begin{minipage}{0.75\textwidth}
+		\includegraphics[width=\textwidth]{images/aging}
+		\fonte{\cite{Facco2016}}
+	\end{minipage}
+\end{figure}
+
+\subsection{Estratégia de Execução}
+
+Fluxograma
+
+Falar de Rígido e Flexível.
+
+\section{Metodologia de Avaliação}
+Apresentar a seção
+
+\subsection{Implementação}
 \label{prototype}
 
 Para a execução dos experimentos em nuvem, utilizaremos o protótipo desenvolvido por Facco \citetexto{Facco2016}, que consiste de uma aplicação em Java para gerenciamento de elasticidade, o AutoElastic. O modelo será estendido, passando a considerar a utilização de contêineres. O protótipo atual consiste de uma ferramenta que gerencia uma nuvem OpenNebula, sendo o controle do ambiente realizado através de uma API em Java que o \textit{middleware} OpenNebula oferece, como por exemplo, a criação de máquinas virtuais dentro do \textit{cluster}. 
 
-\subsection{Plataforma}
-Escolhemos o Docker como plataforma de manipulação de contêineres, justamente pela sua facilidade de gerenciar contêineres e estabelecer um padrão de utilização muito aceito pelo mercado. A plataforma OpenNebula fornece extensões para permitir a utilização do Docker ao invés de Máquinas Virtuais, conforme a sua documentação por Laguna \citetexto{onedock2015}:
+Escolhemos o Docker como ferramenta de manipulação de contêineres, justamente pela sua facilidade de gerenciar contêineres e estabelecer um padrão de utilização muito aceito pelo mercado. A plataforma OpenNebula fornece extensões para permitir a utilização do Docker ao invés de Máquinas Virtuais, conforme a sua documentação por Laguna \citetexto{onedock2015}:
 
 \begin{quote}
 ONEDock é um conjunto de extensões para o OpenNebula para utilização de Docker contêineres como entidades de primeira classe, assim como se fossem Máquinas Virtuais (VM) leves. Para tal, Docker é configurado para atual como um \textit{hypervisor}, comportando-se então, como o KVM ou outro \textit{hypervisor} fazem no contexto de OpenNebula.
@@ -356,7 +372,7 @@ ONEDock é um conjunto de extensões para o OpenNebula para utilização de Dock
 
 Este conjunto de ferramentas é open-source, o que possibilitou a codificação de características não suportadas pela distribuição atual da ferramenta, como veremos logo adiante na seção \ref{avaliacao}.
 
-\subsection{Acesso à rede}
+\subsubsection{Acesso à rede}
 O OpenNebula permite que seja definida uma interface de rede no momento de deploy de uma máquina virtual, porém o Docker possui uma configuração própria de interface de rede para o computador no qual está sendo executado, que é visível para todos os contêineres em execução na mesma máquina, porém não acessível de fora deste computador. Cada computador possui um processo Docker que gerencia os contêineres, a entrega de uma imagem do frontend para os nós é feita através de entrega da imagem no diretório compartilhado e execução remota de comandos Docker, como mostrado na figura \ref{fig:provision-use-case}.
 
 \begin{figure}
@@ -382,21 +398,6 @@ Os contêineres lançados possuem acesso somente à esta rede isolada. Portanto,
 \end{figure}
 
 
-\subsection{Infraestrutura}
-
-Como infraestrutura de nuvem, utilizaremos o ambiente disponibilizado pela Universidade do Vale do Rio dos Sinos, localizado no laboratório C01 413 do Programa de Pós-Graduação em Computação Aplicada (PIPCA). O laboratório conta com 18 computadores, interconectados através de uma rede 100Mbps, sendo a configuração de cada um deles uma memória de 4 GB, além de processadores de dois núcleos de 2.9 GHz. Porém, para fins de teste de cenários específicos deste trabalho, 5 máquinas do laboratório foram configuradas para serem utilizadas. A plataforma de nuvem OpenNebula será instalada nesta rede de computadores para a execução do protótipo, sendo que uma das máquinas será utilizada como nó \textit{Front-End}. 
-A versão 1.1 do ONEDock tem suporte mínimo para a distribuição 4.14 do OpenNebula, portanto esta também teve que ser instalado. Além disto,a versão 1.9 do Docker foi escolhida por ser a versão no qual o ONEDock 1.1 foi testado. 
-
-
-\section{Metodologia de Avaliação}
-\label{avaliacao}
-
-Apesar da utilização de contêineres e máquinas virtuais serem estratégias de virtualização, estas não são idênticas em sua arquitetura. Portanto, o modelo de avaliação irá verificar os cenários de utilização onde um modelo pode ser melhor do que o outro. Tendo em vista isto, para a análise dos resultados, serão utilizadas métricas para avaliação de desempenho da aplicação, bem como a eficiência na utilização de recursos. Ainda, serão utilizadas métricas para verificar o consumo de recursos na aplicação executando de forma paralela, com diferentes números de contêineres e máquinas virtuais por nó computacional. 
-
-As técnicas de análise de \textit{Speedup} Elástico e Eficiência Elástica serão utilizadas para medir o desempenho de elasticidade de de nuvem em aplicações HPC \cite{Facco2016}. O \textit{Speedup} Elástico será utilizado para identificar a elasticidade do modelo em duas situações, uma com modelo configurado para um processo único executando a aplicação, e no outro será analisado o desempenho da execução em paralelo. A técnica de análise de Eficiência Elástica será utilizada, pois é pertinente identificar o quão eficiente é o modelo em questão de utilização dos recursos disponíveis, considerando sempre a elasticidade horizontal, ou seja, adicionando ou removendo recursos através de provisionamento de novas instâncias. 
-
-A partir da utilização de tais técnicas de avaliação, pode-se considerar vários cenários de implementação da nuvem, ou seja, as combinações serão exploradas independente de quantos núcleos de processamento estão disponível para cada nó computacional, isto com o objetivo de identificar as situações em que os modelos terão comportamentos discrepantes. Dessa forma, será feita também uma análise comparando o tempo de provisionamento dos recursos, levando em consideração todos os momentos envolvidos, que são: a busca da imagem no nó principal, o tempo de transferência desta imagem para o nó de execução, o tempo de criação da instância a partir da imagem e o tempo de inicialização da instância para rodar a aplicação. Estes passos são considerados tanto para máquinas virtuais quanto contêineres. 
-
 \subsection{Cenários}
 \label{cenarios}
 
@@ -421,11 +422,11 @@ Para a execução dos cenários de teste, estaremos utilizando a aplicação des
 
 Considerando a infraestrutura já mencionada, cada nó foi exclusivamente dedicado para execução do benchmarking, sendo a aplicação do AutoElastic executava em um computador fora da Nuvem, utilizando a API do OpenNebula para controle dos recursos. O SLA foi configurado diferentemente para cada tipo de cenário, porém o número de hosts físicos foi fixado em 4, além de 1 host para o front-end. 
 
-\subsection{Execução com VMs}
+\subsubsection{Execução com VMs}
 
 O DoCPB (Docker contêineres Parallel Benchmarking) contará com uma execução do AutoElastic configurado para instanciar máquinas virtuais, que servirá como base de comparação, sendo que este é considerado o estado da arte do modelo. Para tal, dois templates de imagens foram configurados com o sistema operacional Ubuntu 10.10, sendo o master provido com 1 unidade de CPU e 1GB de RAM, além do template slave com 1 unidade de CPU e 2GB de RAM, desta forma, cada vez que for solicitado por um recurso adicional de computação, uma unidade slave é carregada para um dos nós de computação, ocupando 1 dos cores de CPU e metade da memória RAM disponível.
 
-\subsection{Execução com contêineres}
+\subsubsection{Execução com contêineres}
 
 A execução da aplicação paralela com configuração de 2 VMs por hosts (1 para cada core) é considerada a mais otimizada, segundo \citetexto{Facco2016}. Porém, não sabemos se a mesma regra se aplica ao cenário de contêineres, por serem processos mais leves que uma máquina virtual, é possível que um número maior de contêineres por nó tenha um desempenho melhor. Tendo em vista isto, criamos os cenários de acordo com a tabela \ref{tab:table3}.
 
@@ -443,6 +444,16 @@ A execução da aplicação paralela com configuração de 2 VMs por hosts (1 pa
 \end{tabular}
 \end{table}
 
+\begin{figure}
+	\caption{Redirecionamento de portas para contêineres}
+	\label{fig:deploy}
+	\centering%
+	\begin{minipage}{0.8\textwidth}
+		\vspace{-0.5\baselineskip}
+		\includegraphics[width=\textwidth]{images/deploy}
+		\fonte{\cite{whitepaperDocker2016}}
+	\end{minipage}
+\end{figure}
 No cenário 1 da tabela, alocamos toda a capacidade de processamento (CPU) e de memória disponível do host, sendo que cada operação de alocação de recursos irá adicionar 1 container em um outro host, ocupando toda a capacidade deste para execução deste container também. No cenário 2, temos uma configuração considerada equivalente ao definido para o cenário de máquinas virtuais, ou seja, 2 contêineres por operação, sendo cada um com 1 core da CPU e 2GB de memória RAM. Temos outros dois cenários estabelecidos para avaliação, o cenário 3 com configuração para ocupar cada nó de processamento com 4 contêineres e o cenário 4 com configuração para 8 contêineres por nó, sendo estes também configurados para ocupar toda a capacidade do nó.
 
 
@@ -465,8 +476,13 @@ actions and process data. We follow this implementation
 because the AutoElastic Manager cannot access the NFS
 directly, unless it is placed inside the cloud.
 
-\subsection{Métricas}
-\label{metricas}
+\subsubsection{Infraestrutura}
+
+Como infraestrutura de nuvem, utilizaremos o ambiente disponibilizado pela Universidade do Vale do Rio dos Sinos, localizado no laboratório C01 413 do Programa de Pós-Graduação em Computação Aplicada (PIPCA). O laboratório conta com 18 computadores, interconectados através de uma rede 100Mbps, sendo a configuração de cada um deles uma memória de 4 GB, além de processadores de dois núcleos de 2.9 GHz. Porém, para fins de teste de cenários específicos deste trabalho, 5 máquinas do laboratório foram configuradas para serem utilizadas. A plataforma de nuvem OpenNebula será instalada nesta rede de computadores para a execução do protótipo, sendo que uma das máquinas será utilizada como nó \textit{Front-End}. 
+A versão 1.1 do ONEDock tem suporte mínimo para a distribuição 4.14 do OpenNebula, portanto esta também teve que ser instalado. Além disto,a versão 1.9 do Docker foi escolhida por ser a versão no qual o ONEDock 1.1 foi testado. 
+
+\subsection{Métricas e Parâmetros}
+Falar dos thresholds escolhidos
 
 De acordo com <cite alguem>, para mantermos o 
 calcular número de CPUs utilizadas??
@@ -476,6 +492,17 @@ Therefore, considering the values of the cost in
 Table 4, the objective is to preserve the truth of
 Inequality (7):
 Fig. 6. (a) Template of the input file for the tests; (b), (c), (d) and (e) are Cost App Time Resource
+
+
+
+As técnicas de análise de \textit{Speedup} Elástico e Eficiência Elástica serão utilizadas para medir o desempenho de elasticidade de de nuvem em aplicações HPC \cite{Facco2016}. O \textit{Speedup} Elástico será utilizado para identificar a elasticidade do modelo em duas situações, uma com modelo configurado para um processo único executando a aplicação, e no outro será analisado o desempenho da execução em paralelo. A técnica de análise de Eficiência Elástica será utilizada, pois é pertinente identificar o quão eficiente é o modelo em questão de utilização dos recursos disponíveis, considerando sempre a elasticidade horizontal, ou seja, adicionando ou removendo recursos através de provisionamento de novas instâncias. 
+
+A partir da utilização de tais técnicas de avaliação, pode-se considerar vários cenários de implementação da nuvem, ou seja, as combinações serão exploradas independente de quantos núcleos de processamento estão disponível para cada nó computacional, isto com o objetivo de identificar as situações em que os modelos terão comportamentos discrepantes. Dessa forma, será feita também uma análise comparando o tempo de provisionamento dos recursos, levando em consideração todos os momentos envolvidos, que são: a busca da imagem no nó principal, o tempo de transferência desta imagem para o nó de execução, o tempo de criação da instância a partir da imagem e o tempo de inicialização da instância para rodar a aplicação. Estes passos são considerados tanto para máquinas virtuais quanto contêineres. 
+
+Falar de Energia e Custo
+
+
+
 
 \section{Resultados}
 \label{avaliacao}
@@ -547,6 +574,14 @@ Esta seção apresenta detalhes sobre o benchmarking DoCPB executado e também i
 \caption{Desempenho para aplicação descendente (cont. R. abrevia para contêineres rígidos e cont. F. para contêineres flexíveis para limite de CPU utilizada)}%
 \label{fig:perf_des}%
 \end{figure}
+
+
+Colocar um gráfico ilustrando diferença
+
+Comparar especificamente 2 por 2 , fazer uma tabelinha:
+Perfil de carga | Virtualização | tempo de alocação | tempo de desalocação | Tempo | Custo
+ascending            VM              160                  nao                 
+
 
 %=======================================================================
 % CONCLUSÃO
