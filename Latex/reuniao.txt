@@ -103,3 +103,33 @@ a grande ideia é: executar mais rápido as apps sem gastar muito mais por isso,
 E fizemos um benchmark pra ver se isso é possível com Docker.
 
 Quando falas em Docker na introdução, fale que ele, ao contrario de VMs, também oferece solução sem isolamento, onde containers num mesmo nó concorrem de igual para igual pela totalidade dos recursos da CPU, o que pode ser bom caso eles realizem tarefas de pi e CPU intermitentes…
+
+VM - sobrecarga de ruim, tempo de deploy que eh ruim, mas tem isolamento
+
+Containers - menos sobrecarga, tempo de deploy curto, com modelos com e sem isolamento (rígido e flexível).
+
+2 tecnicas
+3 modalidades
+
+
+
+Nao há trabalhos que explorem uma analise comparativa entre as 2 técnicas e 3 modalidades no contexto de PAD, tampouco no que tange o numero de entidades executadoras (VMs ou containers) por nó na variação da carga em tempo de execução.
+
+—
+
+Motivacao?
+
+- quanto o tempo de deploy de container pode ser menor? o quanto é menor?
+
+- container, é melhor o rígido ou flexível e porque?
+
+- numa maquina dual core, qual seria o melhor deployment para diferentes tipos de carga (2 cargas, ascendente e desendente) - ou seja, com 2 cores é melhor ter sempre 2 conteinaers ou VMs pior nó, ou mais?
+
+
+- depois do boot, qual o overhead de VMe coteiner?
+
+- com a mesma carga, sera que VM se cansa mais?
+
+- resultado: a mesma carga, NAOOOOOOOO gera o mesmo stress em cada um deles - VM e container.
+
+- VM passa pelo hypervisor???
